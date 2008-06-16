@@ -4,7 +4,8 @@
 ----------------------
 
 local L = setmetatable({}, {__index=function(t,i) return i end})
-local defaults, defaultsPC, db, dbpc = {}, {}
+local defaults, defaultsPC, db, dbpc = {}, {items = ""}
+local items = {}
 
 
 ------------------------------
@@ -21,7 +22,7 @@ local function Debug(...) if debugf then debugf:AddMessage(string.join(", ", ...
 --      Event Handler      --
 -----------------------------
 
-local f = CreateFrame("frame", nil, AuctionFrame)
+local f = CreateFrame("Button", nil, AuctionFrame)
 f:SetScript("OnEvent", function(self, event, ...) if self[event] then return self[event](self, event, ...) end end)
 f:RegisterEvent("ADDON_LOADED")
 f:Hide()
@@ -32,6 +33,13 @@ function f:ADDON_LOADED(event, addon)
 
 	tekaucDB, tekaucDBPC = setmetatable(tekaucDB or {}, {__index = defaults}), setmetatable(tekaucDBPC or {}, {__index = defaultsPC})
 	db, dbpc = tekaucDB, tekaucDBPC
+
+	if dbpc.items ~= "" then
+		local function helper(...)
+			for i=1,select("#", ...) do items[tonumber((select(i, ...)))] = true end
+		end
+		helper(string.split(" ", dbpc.items))
+	end
 
 	local n = AuctionFrame.numTabs+1
 	self.tabindex = n
@@ -65,6 +73,9 @@ function f:ADDON_LOADED(event, addon)
 	self:SetPoint("TOPLEFT", 20, -71)
 	self:SetPoint("BOTTOMRIGHT", -10, 37)
 
+	self:SetScript("OnReceiveDrag", self.OnReceiveDrag)
+	self:SetScript("OnClick", function(self) if CursorHasItem() then self:OnReceiveDrag() end end)
+
 	LibStub("tekKonfig-AboutPanel").new(nil, "tekauc") -- Remove first arg if no parent config panel
 
 	self:UnregisterEvent("ADDON_LOADED")
@@ -75,9 +86,20 @@ end
 
 
 function f:PLAYER_LOGOUT()
+	local temp = {}
+	for item in pairs(items) do table.insert(temp, item) end
+	dbpc.items = table.concat(temp, " ")
+
 	for i,v in pairs(defaults) do if db[i] == v then db[i] = nil end end
 	for i,v in pairs(defaultsPC) do if dbpc[i] == v then dbpc[i] = nil end end
 
 	-- Do anything you need to do as the player logs out
+end
+
+
+function f:OnReceiveDrag()
+	local infotype, itemid, itemlink = GetCursorInfo()
+	if infotype == "item" then items[itemid] = select(8, GetItemInfo(itemid)) end
+	return ClearCursor()
 end
 
