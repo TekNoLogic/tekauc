@@ -59,11 +59,8 @@ function f:ADDON_LOADED(event, addon)
 		self:Show()
 	end)
 
-	local orig = AuctionFrameTab_OnClick
-	AuctionFrameTab_OnClick = function(...)
-		self:Hide()
-		return orig(...)
-	end
+	local function Hider() self:Hide() end
+	for _,frame in pairs({AuctionFrameAuctions, AuctionFrameBrowse, AuctionFrameBid}) do CreateFrame("Frame", nil, frame):SetScript("OnShow", Hider) end
 
 	self:SetPoint("TOPLEFT", 20, -71)
 	self:SetPoint("BOTTOMRIGHT", -10, 37)
