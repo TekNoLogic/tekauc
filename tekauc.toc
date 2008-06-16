@@ -13,9 +13,8 @@
 
 ## OptionalDeps: tekDebug
 
-## LoadManagers: AddonLoader
-## X-LoadOn-Always: delayed
-## X-LoadOn-Slash: /tekauc
+## LoadOnDemand: 1
+## LoadWith: Blizzard_AuctionUI
 
 LibStub.lua
 tekKonfigAboutPanel.lua

@@ -39,17 +39,7 @@ function f:ADDON_LOADED(event, addon)
 	self:UnregisterEvent("ADDON_LOADED")
 	self.ADDON_LOADED = nil
 
-	if IsLoggedIn() then self:PLAYER_LOGIN() else self:RegisterEvent("PLAYER_LOGIN") end
-end
-
-
-function f:PLAYER_LOGIN()
 	self:RegisterEvent("PLAYER_LOGOUT")
-
-	-- Do anything you need to do after the player has entered the world
-
-	self:UnregisterEvent("PLAYER_LOGIN")
-	self.PLAYER_LOGIN = nil
 end
 
 
@@ -60,12 +50,3 @@ function f:PLAYER_LOGOUT()
 	-- Do anything you need to do as the player logs out
 end
 
-
------------------------------
---      Slash Handler      --
------------------------------
-
-SLASH_TEKAUC1 = "/tekauc"
-SlashCmdList.TEKAUC = function(msg)
-	-- Do crap here
-end
