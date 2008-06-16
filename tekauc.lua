@@ -11,9 +11,9 @@ local defaults, defaultsPC, db, dbpc = {}, {}
 --      Util Functions      --
 ------------------------------
 
-local function Print(...) ChatFrame1:AddMessage(string.join(" ", "|cFF33FF99Addon Template|r:", ...)) end
+local function Print(...) ChatFrame1:AddMessage(string.join(" ", "|cFF33FF99tekauc|r:", ...)) end
 
-local debugf = tekDebug and tekDebug:GetFrame("AddonTemplate")
+local debugf = tekDebug and tekDebug:GetFrame("tekauc")
 local function Debug(...) if debugf then debugf:AddMessage(string.join(", ", ...)) end end
 
 
@@ -27,14 +27,14 @@ f:RegisterEvent("ADDON_LOADED")
 
 
 function f:ADDON_LOADED(event, addon)
-	if addon ~= "AddonTemplate" then return end
+	if addon ~= "tekauc" then return end
 
-	AddonTemplateDB, AddonTemplateDBPC = setmetatable(AddonTemplateDB or {}, {__index = defaults}), setmetatable(AddonTemplateDBPC or {}, {__index = defaultsPC})
-	db, dbpc = AddonTemplateDB, AddonTemplateDBPC
+	tekaucDB, tekaucDBPC = setmetatable(tekaucDB or {}, {__index = defaults}), setmetatable(tekaucDBPC or {}, {__index = defaultsPC})
+	db, dbpc = tekaucDB, tekaucDBPC
 
 	-- Do anything you need to do after addon has loaded
 
-	LibStub("tekKonfig-AboutPanel").new("AddonTemplate", "AddonTemplate") -- Remove first arg if no parent config panel
+	LibStub("tekKonfig-AboutPanel").new("tekauc", "tekauc") -- Remove first arg if no parent config panel
 
 	self:UnregisterEvent("ADDON_LOADED")
 	self.ADDON_LOADED = nil
@@ -65,7 +65,7 @@ end
 --      Slash Handler      --
 -----------------------------
 
-SLASH_ADDONTEMPLATE1 = "/addontemplate"
-SlashCmdList.ADDONTEMPLATE = function(msg)
+SLASH_TEKAUC1 = "/tekauc"
+SlashCmdList.TEKAUC = function(msg)
 	-- Do crap here
 end
