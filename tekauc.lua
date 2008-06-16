@@ -32,9 +32,32 @@ function f:ADDON_LOADED(event, addon)
 	tekaucDB, tekaucDBPC = setmetatable(tekaucDB or {}, {__index = defaults}), setmetatable(tekaucDBPC or {}, {__index = defaultsPC})
 	db, dbpc = tekaucDB, tekaucDBPC
 
-	-- Do anything you need to do after addon has loaded
+	local n = AuctionFrame.numTabs+1
+	self.tabindex = n
+	local framename = "AuctionFrameTab"..n
+	local frame = CreateFrame("Button", framename, AuctionFrame, "CharacterFrameTabButtonTemplate")
+	frame:SetID(n)
+	frame:SetText("tekauc")
+	frame:SetPoint("LEFT", getglobal("AuctionFrameTab"..n-1), "RIGHT", -8, 0)
+	PanelTemplates_SetNumTabs(AuctionFrame, n)
+	PanelTemplates_EnableTab(AuctionFrame, n)
 
-	LibStub("tekKonfig-AboutPanel").new("tekauc", "tekauc") -- Remove first arg if no parent config panel
+	frame:SetScript("OnClick", function()
+		PanelTemplates_SetTab(AuctionFrame, n)
+		AuctionFrameAuctions:Hide()
+		AuctionFrameBrowse:Hide()
+		AuctionFrameBid:Hide()
+		PlaySound("igCharacterInfoTab")
+
+		AuctionFrameTopLeft:SetTexture("Interface\\AuctionFrame\\UI-AuctionFrame-Bid-TopLeft")
+		AuctionFrameTop:SetTexture("Interface\\AuctionFrame\\UI-AuctionFrame-Bid-Top")
+		AuctionFrameTopRight:SetTexture("Interface\\AuctionFrame\\UI-AuctionFrame-Bid-TopRight")
+		AuctionFrameBotLeft:SetTexture("Interface\\AuctionFrame\\UI-AuctionFrame-Bid-BotLeft")
+		AuctionFrameBot:SetTexture("Interface\\AuctionFrame\\UI-AuctionFrame-Bid-Bot")
+		AuctionFrameBotRight:SetTexture("Interface\\AuctionFrame\\UI-AuctionFrame-Bid-BotRight")
+	end)
+
+	LibStub("tekKonfig-AboutPanel").new(nil, "tekauc") -- Remove first arg if no parent config panel
 
 	self:UnregisterEvent("ADDON_LOADED")
 	self.ADDON_LOADED = nil
