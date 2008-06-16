@@ -21,9 +21,10 @@ local function Debug(...) if debugf then debugf:AddMessage(string.join(", ", ...
 --      Event Handler      --
 -----------------------------
 
-local f = CreateFrame("frame")
+local f = CreateFrame("frame", nil, AuctionFrame)
 f:SetScript("OnEvent", function(self, event, ...) if self[event] then return self[event](self, event, ...) end end)
 f:RegisterEvent("ADDON_LOADED")
+f:Hide()
 
 
 function f:ADDON_LOADED(event, addon)
@@ -55,7 +56,17 @@ function f:ADDON_LOADED(event, addon)
 		AuctionFrameBotLeft:SetTexture("Interface\\AuctionFrame\\UI-AuctionFrame-Bid-BotLeft")
 		AuctionFrameBot:SetTexture("Interface\\AuctionFrame\\UI-AuctionFrame-Bid-Bot")
 		AuctionFrameBotRight:SetTexture("Interface\\AuctionFrame\\UI-AuctionFrame-Bid-BotRight")
+		self:Show()
 	end)
+
+	local orig = AuctionFrameTab_OnClick
+	AuctionFrameTab_OnClick = function(...)
+		self:Hide()
+		return orig(...)
+	end
+
+	self:SetPoint("TOPLEFT", 20, -71)
+	self:SetPoint("BOTTOMRIGHT", -10, 37)
 
 	LibStub("tekKonfig-AboutPanel").new(nil, "tekauc") -- Remove first arg if no parent config panel
 
