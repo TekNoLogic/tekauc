@@ -102,3 +102,12 @@ function tekauc:Print(...) ChatFrame1:AddMessage(string.join(" ", "|cFF33FF99tek
 
 local debugf = tekDebug and tekDebug:GetFrame("tekauc")
 function tekauc:Debug(...) if debugf then debugf:AddMessage(string.join(", ", ...)) end end
+
+function tekauc:GS(cash)
+	if not cash then return end
+	cash = cash/100
+	local s = floor(cash%100)
+	local g = floor(cash/100)
+	if g > 0 then return string.format("|cffffd700%d.|cffc7c7cf%02d", g, s)
+	else return string.format("|cffc7c7cf%d", s) end
+end
