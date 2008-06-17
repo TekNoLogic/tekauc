@@ -22,13 +22,13 @@ local function Debug(...) if debugf then debugf:AddMessage(string.join(", ", ...
 --      Event Handler      --
 -----------------------------
 
-local f = CreateFrame("Button", nil, AuctionFrame)
-f:SetScript("OnEvent", function(self, event, ...) if self[event] then return self[event](self, event, ...) end end)
-f:RegisterEvent("ADDON_LOADED")
-f:Hide()
+tekauc = CreateFrame("Button", nil, AuctionFrame)
+tekauc:SetScript("OnEvent", function(self, event, ...) if self[event] then return self[event](self, event, ...) end end)
+tekauc:RegisterEvent("ADDON_LOADED")
+tekauc:Hide()
 
 
-function f:ADDON_LOADED(event, addon)
+function tekauc:ADDON_LOADED(event, addon)
 	if addon ~= "tekauc" then return end
 
 	tekaucDB, tekaucDBPC = setmetatable(tekaucDB or {}, {__index = defaults}), setmetatable(tekaucDBPC or {}, {__index = defaultsPC})
@@ -85,7 +85,7 @@ function f:ADDON_LOADED(event, addon)
 end
 
 
-function f:PLAYER_LOGOUT()
+function tekauc:PLAYER_LOGOUT()
 	local temp = {}
 	for item in pairs(items) do table.insert(temp, item) end
 	dbpc.items = table.concat(temp, " ")
