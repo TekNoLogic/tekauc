@@ -87,7 +87,7 @@ function tekauc:PLAYER_LOGOUT()
 end
 
 
-function f:OnReceiveDrag()
+function tekauc:OnReceiveDrag()
 	local infotype, itemid, itemlink = GetCursorInfo()
 	if infotype == "item" then items[itemid] = select(8, GetItemInfo(itemid)) end
 	return ClearCursor()
