@@ -18,5 +18,6 @@
 
 LibStub.lua
 tekKonfigAboutPanel.lua
+tekIDmemo.lua
 
 tekauc.lua
