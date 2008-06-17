@@ -8,16 +8,6 @@ local defaults, defaultsPC, db, dbpc = {}, {items = ""}
 local items = {}
 
 
-------------------------------
---      Util Functions      --
-------------------------------
-
-local function Print(...) ChatFrame1:AddMessage(string.join(" ", "|cFF33FF99tekauc|r:", ...)) end
-
-local debugf = tekDebug and tekDebug:GetFrame("tekauc")
-local function Debug(...) if debugf then debugf:AddMessage(string.join(", ", ...)) end end
-
-
 -----------------------------
 --      Event Handler      --
 -----------------------------
@@ -103,3 +93,12 @@ function f:OnReceiveDrag()
 	return ClearCursor()
 end
 
+
+------------------------------
+--      Util Functions      --
+------------------------------
+
+function tekauc:Print(...) ChatFrame1:AddMessage(string.join(" ", "|cFF33FF99tekauc|r:", ...)) end
+
+local debugf = tekDebug and tekDebug:GetFrame("tekauc")
+function tekauc:Debug(...) if debugf then debugf:AddMessage(string.join(", ", ...)) end end
