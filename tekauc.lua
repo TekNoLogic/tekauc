@@ -42,6 +42,8 @@ function tekauc:ADDON_LOADED(event, addon)
 	PanelTemplates_EnableTab(AuctionFrame, n)
 
 	frame:SetScript("OnClick", function()
+		AuctionFrameTab_OnClick(n)
+
 		PanelTemplates_SetTab(AuctionFrame, n)
 		AuctionFrameAuctions:Hide()
 		AuctionFrameBrowse:Hide()
@@ -66,7 +68,28 @@ function tekauc:ADDON_LOADED(event, addon)
 	self:SetScript("OnReceiveDrag", self.OnReceiveDrag)
 	self:SetScript("OnClick", function(self) if CursorHasItem() then self:OnReceiveDrag() end end)
 
-	LibStub("tekKonfig-AboutPanel").new(nil, "tekauc") -- Remove first arg if no parent config panel
+	local anchor = self
+	local rows = {}
+	for id in pairs(items) do
+		local r = CreateFrame("Frame", nil, self)
+		r:SetPoint("TOPLEFT", anchor, anchor == self and "TOPLEFT" or "BOTTOMLEFT", anchor == self and 5 or 0, -5)
+		r:SetPoint("RIGHT", self, -5, 0)
+		r:SetHeight(32)
+
+		local icon = r:CreateTexture()
+		icon:SetWidth(32) icon:SetHeight(32)
+		icon:SetPoint("TOPLEFT", r)
+		icon:SetTexture(GetItemIcon(id))
+
+		anchor = r
+		table.insert(rows, r)
+	end
+
+	self.UpdateSellPanel = function(self)
+
+	end
+
+	LibStub("tekKonfig-AboutPanel").new("tekauc")
 
 	self:UnregisterEvent("ADDON_LOADED")
 	self.ADDON_LOADED = nil
@@ -111,3 +134,4 @@ function tekauc:GS(cash)
 	if g > 0 then return string.format("|cffffd700%d.|cffc7c7cf%02d", g, s)
 	else return string.format("|cffc7c7cf%d", s) end
 end
+

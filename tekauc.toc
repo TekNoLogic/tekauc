@@ -23,4 +23,9 @@ tekIDmemo.lua
 
 tekauc.lua
 scanner.lua
+manualprices.lua
 tooltips.lua
+seller.lua
+sort.lua
+buyout.lua
+splitter.lua
