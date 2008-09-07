@@ -15,7 +15,13 @@ local OnTooltipSetItem = function(frame, ...)
 		if min then frame:AddDoubleLine("AH buyout:", max and max ~= min and (tekauc:GS(min).." - "..tekauc:GS(max)) or tekauc:GS(min)) end
 		if min and (maxStack or 0) > 1 then frame:AddDoubleLine("AH stack buyout:", max and max ~= min and (tekauc:GS(min*maxStack).." - "..tekauc:GS(max*maxStack)) or tekauc:GS(min*maxStack)) end
 		if count then frame:AddDoubleLine("Number on AH:", count) end
+
+		local owner = frame:GetOwner()
+		if frame == GameTooltip and min and owner and owner.hasItem and AuctionFrame:IsVisible() and owner:GetParent():GetID() ~= KEYRING_CONTAINER then
+			frame:AddLine("Alt-click to post on AH", 1, 0, 0.5)
+		end
 	end
+
 	if origs[frame] then return origs[frame](frame, ...) end
 end
 
