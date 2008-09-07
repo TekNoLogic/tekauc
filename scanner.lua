@@ -12,7 +12,7 @@ butt:SetText("Scan All")
 
 local enabled = true
 butt:SetScript("OnUpdate", function(self)
-	local _, scannable = CanSendAuctionQuery("list")
+	local _, scanable = CanSendAuctionQuery("list")
 	if enabled and not scanable then self:Disable()
 	elseif not enabled and scanable then self:Enable() end
 	enabled = scanable
