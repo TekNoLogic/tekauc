@@ -10,7 +10,7 @@ BrowseSearchButton:SetPoint("LEFT", IsUsableCheckButton, "RIGHT", 10, -8)
 local butt = LibStub("tekKonfig-Button").new(BrowseSearchButton, "BOTTOM", BrowseSearchButton, "TOP")
 butt:SetText("Scan All")
 
-butt:SetScript("OnClick", function()
+butt:SetScript("OnClick", function(self)
 	if not select(2, CanSendAuctionQuery("list")) then return ChatFrame1:AddMessage("Cannot scan yet") end
 
 	ChatFrame1:AddMessage("Sending all-scan query")
