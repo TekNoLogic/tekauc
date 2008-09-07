@@ -1,4 +1,5 @@
 
+local INFLATION_LIMIT = 2.5 -- Maximum markup we'll allow over manually set prices
 local ids = LibStub("tekIDmemo")
 local mins, maxes, counts, lastseen = {}, {}, {}, {}
 
@@ -25,7 +26,7 @@ butt:SetScript("OnEvent", function(self)
 		local name, texture, count, quality, canUse, level, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner = GetAuctionItemInfo("list", i)
 		local id = ids[GetAuctionItemLink("list", i)]
 		buyoutPrice = buyoutPrice / count
-		if buyoutPrice > 0 and (not tekauc.manualprices[id] or tekauc.manualprices[id] > (buyoutPrice/2.5)) then
+		if buyoutPrice > 0 and (not tekauc.manualprices[id] or (tekauc.manualprices[id] * INFLATION_LIMIT) >= buyoutPrice) then
 			if (mins[id] or 9999999999) > buyoutPrice then mins[id] = buyoutPrice end
 			if (maxes[id] or 0) < buyoutPrice then maxes[id] = buyoutPrice end
 			counts[id] = (counts[id] or 0) + count
