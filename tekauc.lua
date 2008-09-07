@@ -89,7 +89,7 @@ function tekauc:ADDON_LOADED(event, addon)
 
 	end
 
-	LibStub("tekKonfig-AboutPanel").new("tekauc")
+	LibStub("tekKonfig-AboutPanel").new(nil, "tekauc")
 
 	self:UnregisterEvent("ADDON_LOADED")
 	self.ADDON_LOADED = nil
