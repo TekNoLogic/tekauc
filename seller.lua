@@ -84,16 +84,21 @@ ContainerFrameItemButton_OnModifiedClick = function(self, button, ...)
 	if AuctionFrame:IsShown() and IsAltKeyDown() then
 		local bag, slot = this:GetParent():GetID(), this:GetID()
 		local link = bag and slot and GetContainerItemLink(bag, slot)
-		local _, stack = GetContainerItemInfo(bag, slot)
-		local price = link and GetAuctionBuyout(link)
-		if not price then
-			if link then Print("Cannot find price for", link) else Print("Error finding item") end
-			return orig(button, ...)
-		end
+		if IsShiftKeyDown() then
+			-- Split into singles!
+			SlashCmdList.TEKSPLITTER(link.." 1")
+		else
+			local _, stack = GetContainerItemInfo(bag, slot)
+			local price = link and GetAuctionBuyout(link)
+			if not price then
+				if link then Print("Cannot find price for", link) else Print("Error finding item") end
+				return orig(button, ...)
+			end
 
-		price = math.floor((price*stack - 1)/500) * 500 -- Rounds down to the next multiple of 5s
-		Print("Queueing ", link, "for sale at ", price)
-		tekauc:PostBatch(ids[link], price, stack)
+			price = math.floor((price*stack - 1)/500) * 500 -- Rounds down to the next multiple of 5s
+			Print("Queueing ", link, "for sale at ", price)
+			tekauc:PostBatch(ids[link], price, stack)
+		end
 	else return orig(self, button, ...) end
 end
 
