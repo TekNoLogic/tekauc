@@ -24,6 +24,9 @@ function tekauc:ADDON_LOADED(event, addon)
 	tekaucDB, tekaucDBPC = setmetatable(tekaucDB or {}, {__index = defaults}), setmetatable(tekaucDBPC or {}, {__index = defaultsPC})
 	db, dbpc = tekaucDB, tekaucDBPC
 
+	db.manualprices = db.manualprices or {}
+	self.manualprices = db.manualprices
+
 	if dbpc.items ~= "" then
 		local function helper(...)
 			for i=1,select("#", ...) do items[tonumber((select(i, ...)))] = true end
