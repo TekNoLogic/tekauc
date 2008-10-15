@@ -80,7 +80,7 @@ end)
 
 
 local orig = ContainerFrameItemButton_OnModifiedClick
-ContainerFrameItemButton_OnModifiedClick = function(button, ...)
+ContainerFrameItemButton_OnModifiedClick = function(self, button, ...)
 	if AuctionFrame:IsShown() and IsAltKeyDown() then
 		local bag, slot = this:GetParent():GetID(), this:GetID()
 		local link = bag and slot and GetContainerItemLink(bag, slot)
@@ -94,6 +94,6 @@ ContainerFrameItemButton_OnModifiedClick = function(button, ...)
 		price = math.floor((price*stack - 1)/500) * 500 -- Rounds down to the next multiple of 5s
 		Print("Queueing ", link, "for sale at ", price)
 		tekauc:PostBatch(ids[link], price, stack)
-	else return orig(button, ...) end
+	else return orig(self, button, ...) end
 end
 
