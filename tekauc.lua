@@ -34,34 +34,6 @@ function tekauc:ADDON_LOADED(event, addon)
 		helper(string.split(" ", dbpc.items))
 	end
 
-	local n = AuctionFrame.numTabs+1
-	self.tabindex = n
-	local framename = "AuctionFrameTab"..n
-	local frame = CreateFrame("Button", framename, AuctionFrame, "CharacterFrameTabButtonTemplate")
-	frame:SetID(n)
-	frame:SetText("tekauc")
-	frame:SetPoint("LEFT", getglobal("AuctionFrameTab"..n-1), "RIGHT", -8, 0)
-	PanelTemplates_SetNumTabs(AuctionFrame, n)
-	PanelTemplates_EnableTab(AuctionFrame, n)
-
-	frame:SetScript("OnClick", function()
-		AuctionFrameTab_OnClick(n)
-
-		PanelTemplates_SetTab(AuctionFrame, n)
-		AuctionFrameAuctions:Hide()
-		AuctionFrameBrowse:Hide()
-		AuctionFrameBid:Hide()
-		PlaySound("igCharacterInfoTab")
-
-		AuctionFrameTopLeft:SetTexture("Interface\\AuctionFrame\\UI-AuctionFrame-Bid-TopLeft")
-		AuctionFrameTop:SetTexture("Interface\\AuctionFrame\\UI-AuctionFrame-Bid-Top")
-		AuctionFrameTopRight:SetTexture("Interface\\AuctionFrame\\UI-AuctionFrame-Bid-TopRight")
-		AuctionFrameBotLeft:SetTexture("Interface\\AuctionFrame\\UI-AuctionFrame-Bid-BotLeft")
-		AuctionFrameBot:SetTexture("Interface\\AuctionFrame\\UI-AuctionFrame-Bid-Bot")
-		AuctionFrameBotRight:SetTexture("Interface\\AuctionFrame\\UI-AuctionFrame-Bid-BotRight")
-		self:Show()
-	end)
-
 	local function Hider() self:Hide() end
 	for _,frame in pairs({AuctionFrameAuctions, AuctionFrameBrowse, AuctionFrameBid}) do CreateFrame("Frame", nil, frame):SetScript("OnShow", Hider) end
 
