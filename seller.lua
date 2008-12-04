@@ -63,6 +63,7 @@ end
 
 
 function tekauc:PostBatch(id, price, stack)
+	if price <= 0 then return end
 	table.insert(queue, id)
 	table.insert(queue, price)
 	table.insert(queue, stack)
