@@ -51,3 +51,5 @@ function GetAuctionBuyout(item)
 	if id and tekauc.manualprices[id] then return tekauc.manualprices[id] end
 	if orig then return orig(item) end
 end
+
+tekauc.GetAuctionBuyout = GetAuctionBuyout

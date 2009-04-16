@@ -81,7 +81,7 @@ end)
 
 
 local function GetPrice(link, stack)
-	local price = link and GetAuctionBuyout(link)
+	local price = link and tekauc.GetAuctionBuyout(link)
 	if not price then return end
 	return math.floor((price*stack - 1)/500) * 500 -- Rounds down to the next multiple of 5s
 end
