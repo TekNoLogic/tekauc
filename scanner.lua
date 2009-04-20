@@ -6,8 +6,7 @@ local mins, maxes, counts, lastseen = {}, {}, {}, {}
 tekauc.mins, tekauc.maxes, tekauc.counts = mins, maxes, counts
 
 
-BrowseSearchButton:SetPoint("LEFT", IsUsableCheckButton, "RIGHT", 10, -8)
-local butt = LibStub("tekKonfig-Button").new(BrowseSearchButton, "BOTTOM", BrowseSearchButton, "TOP")
+local butt = LibStub("tekKonfig-Button").new(BrowseSearchButton, "RIGHT", BrowseSearchButton, "LEFT", -10, 0)
 butt:SetText("Scan All")
 
 local enabled = true
