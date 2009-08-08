@@ -123,6 +123,7 @@ local blist = [[
  5498  5500  7971 13926 24478 36783 24479
 25867 25868 36784 41266 41334 42225
 11382 12363 19774
+36919 36931 36922 36934 36925 36928
 ]]
 local butt = LibStub("tekKonfig-Button").new(AuctionFrameAuctions, "TOPRIGHT", 20, -13)
 butt:SetText("Sell Gems")
