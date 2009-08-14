@@ -112,6 +112,21 @@ ContainerFrameItemButton_OnModifiedClick = function(self, button, ...)
 end
 
 
+local bgFrame = {bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", insets = {left = PADDING, right = PADDING, top = PADDING, bottom = PADDING},
+	tile = true, tileSize = 16, edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 16}
+
+local f = CreateFrame("Frame", nil, AuctionFrameAuctions)
+f:SetPoint("TOP", 0, -21)
+f:SetPoint("LEFT", AuctionFrameAuctions, "RIGHT", 65, 0)
+f:SetWidth(175)
+f:SetHeight(75)
+f:SetFrameLevel(AuctionFrameAuctions:GetFrameLevel()-1)
+
+f:SetBackdrop(bgFrame)
+f:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b)
+f:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b)
+
+
 local blist = [[
   818   774  1206  1210  1529  1705
  3864  7909  7910 12361 12364 12799 12800
@@ -125,30 +140,38 @@ local blist = [[
 11382 12363 19774
 36919 36931 36922 36934 36925 36928
 ]]
-local butt = LibStub("tekKonfig-Button").new(AuctionFrameAuctions, "TOPRIGHT", 20, -13)
-butt:SetText("Sell Gems")
-butt.tiptext = "Post all cut gems in your bags"
-butt:SetScript("OnClick", function(self)
+
+
+local function IsEnchantScroll(link)
+	if not link then return end
+	local name, _, _, _, _, _, subtype = GetItemInfo(link)
+	return subtype == "Item Enhancement" and name:match("^Scroll of Enchant")
+end
+
+
+local butt1 = LibStub("tekKonfig-Button").new(f, "TOPLEFT", 10, -4)
+butt1:SetText("Split Chants")
+butt1.tiptext = "Split enchant scroll stacks into singles"
+butt1:SetScript("OnClick", function(self)
 	for bag=0,4 do
 		for slot=1,GetContainerNumSlots(bag) do
 			local link = GetContainerItemLink(bag, slot)
-			if link and select(6, GetItemInfo(link)) == "Gem" and not blist:match(ids[link]) and select(2, GetContainerItemInfo(bag, slot)) == 1 then
-				local price = GetPrice(link, 1)
-				if price then tekauc:PostBatch(ids[link], price, 1) end
+			if IsEnchantScroll(link) and select(2, GetContainerItemInfo(bag, slot)) ~= 1 then
+				SlashCmdList.TEKSPLITTER(link.." 1")
 			end
 		end
 	end
 end)
 
 
-local butt2 = LibStub("tekKonfig-Button").new(butt, "RIGHT", butt, "LEFT", -20, 0)
-butt2:SetText("Sell Glyphs")
-butt2.tiptext = "Post all single-stack glyphs in your bags"
+local butt2 = LibStub("tekKonfig-Button").new(f, "LEFT", butt1, "RIGHT")
+butt2:SetText("Sell Chants")
+butt2.tiptext = "Post all enchant scrolls in your bags"
 butt2:SetScript("OnClick", function(self)
 	for bag=0,4 do
 		for slot=1,GetContainerNumSlots(bag) do
 			local link = GetContainerItemLink(bag, slot)
-			if link and select(6, GetItemInfo(link)) == "Glyph" and select(2, GetContainerItemInfo(bag, slot)) == 1 then
+			if IsEnchantScroll(link) and select(2, GetContainerItemInfo(bag, slot)) == 1 then
 				local price = GetPrice(link, 1)
 				if price then tekauc:PostBatch(ids[link], price, 1) end
 			end
@@ -157,7 +180,7 @@ butt2:SetScript("OnClick", function(self)
 end)
 
 
-local butt3 = LibStub("tekKonfig-Button").new(butt, "RIGHT", butt2, "LEFT")
+local butt3 = LibStub("tekKonfig-Button").new(f, "TOP", butt1, "BOTTOM", 0, 0)
 butt3:SetText("Split Glyphs")
 butt3.tiptext = "Split glyph stacks into singles"
 butt3:SetScript("OnClick", function(self)
@@ -171,3 +194,34 @@ butt3:SetScript("OnClick", function(self)
 	end
 end)
 
+
+local butt4 = LibStub("tekKonfig-Button").new(f, "LEFT", butt3, "RIGHT")
+butt4:SetText("Sell Glyphs")
+butt4.tiptext = "Post all single-stack glyphs in your bags"
+butt4:SetScript("OnClick", function(self)
+	for bag=0,4 do
+		for slot=1,GetContainerNumSlots(bag) do
+			local link = GetContainerItemLink(bag, slot)
+			if link and select(6, GetItemInfo(link)) == "Glyph" and select(2, GetContainerItemInfo(bag, slot)) == 1 then
+				local price = GetPrice(link, 1)
+				if price then tekauc:PostBatch(ids[link], price, 1) end
+			end
+		end
+	end
+end)
+
+
+local butt5 = LibStub("tekKonfig-Button").new(f, "TOP", butt4, "BOTTOM", 0, 0)
+butt5:SetText("Sell Gems")
+butt5.tiptext = "Post all cut gems in your bags"
+butt5:SetScript("OnClick", function(self)
+	for bag=0,4 do
+		for slot=1,GetContainerNumSlots(bag) do
+			local link = GetContainerItemLink(bag, slot)
+			if link and select(6, GetItemInfo(link)) == "Gem" and not blist:match(ids[link]) and select(2, GetContainerItemInfo(bag, slot)) == 1 then
+				local price = GetPrice(link, 1)
+				if price then tekauc:PostBatch(ids[link], price, 1) end
+			end
+		end
+	end
+end)
