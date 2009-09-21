@@ -102,7 +102,7 @@ ContainerFrameItemButton_OnModifiedClick = function(self, button, ...)
 			local price = GetPrice(link, stack)
 			if not price then
 				if link then Print("Cannot find price for", link) else Print("Error finding item") end
-				return orig(button, ...)
+				return orig(self, button, ...)
 			end
 
 			Print("Queueing ", link, "for sale at ", price)
