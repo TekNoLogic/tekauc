@@ -115,12 +115,12 @@ end
 local bgFrame = {bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", insets = {left = PADDING, right = PADDING, top = PADDING, bottom = PADDING},
 	tile = true, tileSize = 16, edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 16}
 
-local f = CreateFrame("Frame", nil, AuctionFrameAuctions)
-f:SetPoint("TOP", 0, -21)
-f:SetPoint("LEFT", AuctionFrameAuctions, "RIGHT", 65, 0)
-f:SetWidth(175)
+local f = CreateFrame("Frame", nil, AuctionFrame)
+f:SetPoint("TOP", 0, 35)
+f:SetPoint("RIGHT", -25, 0)
+f:SetWidth(248)
 f:SetHeight(75)
-f:SetFrameLevel(AuctionFrameAuctions:GetFrameLevel()-1)
+f:SetFrameLevel(AuctionFrame:GetFrameLevel()-1)
 
 f:SetBackdrop(bgFrame)
 f:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b)
@@ -149,7 +149,8 @@ local function IsEnchantScroll(link)
 end
 
 
-local butt1 = LibStub("tekKonfig-Button").new(f, "TOPLEFT", 10, -4)
+local butt1 = LibStub("tekKonfig-Button").new(f, "TOPLEFT", 4, -4)
+butt1:SetFrameLevel(AuctionFrame:GetFrameLevel()+1)
 butt1:SetText("Split Chants")
 butt1.tiptext = "Split enchant scroll stacks into singles"
 butt1:SetScript("OnClick", function(self)
@@ -164,7 +165,8 @@ butt1:SetScript("OnClick", function(self)
 end)
 
 
-local butt2 = LibStub("tekKonfig-Button").new(f, "LEFT", butt1, "RIGHT")
+local butt2 = LibStub("tekKonfig-Button").new(f, "TOP", butt1, "BOTTOM")
+butt2:SetFrameLevel(AuctionFrame:GetFrameLevel()+1)
 butt2:SetText("Sell Chants")
 butt2.tiptext = "Post all enchant scrolls in your bags"
 butt2:SetScript("OnClick", function(self)
@@ -180,7 +182,8 @@ butt2:SetScript("OnClick", function(self)
 end)
 
 
-local butt3 = LibStub("tekKonfig-Button").new(f, "TOP", butt1, "BOTTOM", 0, 0)
+local butt3 = LibStub("tekKonfig-Button").new(f, "LEFT", butt1, "RIGHT", 0, 0)
+butt3:SetFrameLevel(AuctionFrame:GetFrameLevel()+1)
 butt3:SetText("Split Glyphs")
 butt3.tiptext = "Split glyph stacks into singles"
 butt3:SetScript("OnClick", function(self)
@@ -195,7 +198,8 @@ butt3:SetScript("OnClick", function(self)
 end)
 
 
-local butt4 = LibStub("tekKonfig-Button").new(f, "LEFT", butt3, "RIGHT")
+local butt4 = LibStub("tekKonfig-Button").new(f, "TOP", butt3, "BOTTOM")
+butt4:SetFrameLevel(AuctionFrame:GetFrameLevel()+1)
 butt4:SetText("Sell Glyphs")
 butt4.tiptext = "Post all single-stack glyphs in your bags"
 butt4:SetScript("OnClick", function(self)
@@ -211,7 +215,8 @@ butt4:SetScript("OnClick", function(self)
 end)
 
 
-local butt5 = LibStub("tekKonfig-Button").new(f, "TOP", butt4, "BOTTOM", 0, 0)
+local butt5 = LibStub("tekKonfig-Button").new(f, "LEFT", butt4, "RIGHT", 0, 0)
+butt5:SetFrameLevel(AuctionFrame:GetFrameLevel()+1)
 butt5:SetText("Sell Gems")
 butt5.tiptext = "Post all cut gems in your bags"
 butt5:SetScript("OnClick", function(self)
