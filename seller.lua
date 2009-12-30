@@ -112,6 +112,7 @@ ContainerFrameItemButton_OnModifiedClick = function(self, button, ...)
 end
 
 
+local PADDING = 4
 local bgFrame = {bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", insets = {left = PADDING, right = PADDING, top = PADDING, bottom = PADDING},
 	tile = true, tileSize = 16, edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 16}
 
