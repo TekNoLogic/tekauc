@@ -11,6 +11,7 @@ local ids = LibStub("tekIDmemo")
 
 local pendingbag, pendingslot, batchitem, batchprice
 local f = CreateFrame("Frame")
+f:Hide()
 local queue = {}
 
 
@@ -18,20 +19,22 @@ local function finditem(id, size)
 	for bag=0,4 do
 		for slot=1,GetContainerNumSlots(bag) do
 			local link = GetContainerItemLink(bag, slot)
-			local _, stack = GetContainerItemInfo(bag, slot)
-			if link and ids[link] == id and stack == size then return bag, slot end
+			if link and ids[link] == id then return bag, slot end
 		end
 	end
 end
 
 
-local function createauction(bag, slot, price, time)
+local function createauction(bag, slot, price, stacksize, time)
+	-- local bag, slot = finditem(id)
 	local link = GetContainerItemLink(bag, slot)
 	if not link then return end
 
-	Debug("Posting auction", link, bag, slot, price, time or 12*60)
-
-	local _, stack = GetContainerItemInfo(bag, slot)
+	local id = ids[link]
+	stacksize, time = stacksize or 1, time or 12*60
+	local numstacks = math.floor(GetItemCount(id)/stacksize)
+	Debug("Posting auction", id, bag, slot, price, stacksize, numstacks, time)
+	Print("Posting", numstacks, "stacks of", link, "x"..stacksize, "for sale at", price)
 
 	PickupContainerItem(bag, slot)
 
@@ -40,9 +43,13 @@ local function createauction(bag, slot, price, time)
 		ClearCursor()
 	end
 
-	pendingbag, pendingslot, batchitem, batchprice, batchstack = bag, slot, ids[link], price, stack
-	f:RegisterEvent("BAG_UPDATE")
-	StartAuction(price, price, time or 12*60)
+	if stacksize == 1 and numstacks == 1 then
+		pendingbag, pendingslot, batchitem, batchprice, batchstack = bag, slot, id, price, stack
+		f:RegisterEvent("BAG_UPDATE")
+	else
+		f:RegisterEvent("AUCTION_MULTISELL_UPDATE")
+	end
+	StartAuction(price, price, time, stacksize, numstacks)
 end
 
 
@@ -50,14 +57,11 @@ local function processqueue()
 	Debug("Processing next item in queue")
 	local id, price, stack = table.remove(queue, 1), table.remove(queue, 1), table.remove(queue, 1)
 	if id and price and stack then
-		local bag, slot = finditem(id, stack)
-		if bag and slot then
-			createauction(bag, slot, price)
+		local bag, slot = finditem(id)
+		if bag and slot then createauction(bag, slot, price, stack)
 		else return processqueue() end
 	else
 		Debug("No more items in queue")
-		pendingbag, pendingslot, batchitem, batchprice = nil
-		f:UnregisterEvent("BAG_UPDATE")
 	end
 end
 
@@ -71,12 +75,32 @@ function tekauc:PostBatch(id, price, stack)
 end
 
 
-f:SetScript("OnEvent", function(self, event, bag)
-	if bag ~= pendingbag or GetContainerItemLink(pendingbag, pendingslot) then return end
+local elap = 0
+f:SetScript("OnShow", function(self) elap = 0 end)
+f:SetScript("OnHide", function(self) processqueue() end)
+f:SetScript("OnUpdate", function(self, e)
+	elap = elap + e
+	if elap >= 1 then self:Hide() end
+end)
+f:SetScript("OnEvent", function(self, event, ...)
+	if event == "AUCTION_MULTISELL_UPDATE" then
+		local posted, total = ...
+		if posted ~= total then return end
 
-	local bag, slot = finditem(batchitem, batchstack)
-	if not (bag and slot) then processqueue()
-	else createauction(bag, slot, batchprice) end
+		f:UnregisterEvent("AUCTION_MULTISELL_UPDATE")
+		f:Show()
+	else
+		local bag = ...
+		if bag ~= pendingbag or GetContainerItemLink(pendingbag, pendingslot) then return end
+
+		local bag, slot = finditem(batchitem, batchstack)
+		if (bag and slot) then return createauction(bag, slot, batchprice) end
+
+		pendingbag, pendingslot, batchitem, batchprice = nil
+		f:UnregisterEvent("BAG_UPDATE")
+
+		processqueue()
+	end
 end)
 
 
@@ -94,20 +118,15 @@ ContainerFrameItemButton_OnModifiedClick = function(self, button, ...)
 	if AuctionFrame:IsShown() and IsAltKeyDown() then
 		local bag, slot = this:GetParent():GetID(), this:GetID()
 		local link = bag and slot and GetContainerItemLink(bag, slot)
-		if IsShiftKeyDown() then
-			-- Split into singles!
-			SlashCmdList.TEKSPLITTER(link.." 1")
-		else
-			local _, stack = GetContainerItemInfo(bag, slot)
-			local price = GetPrice(link, stack)
-			if not price then
-				if link then Print("Cannot find price for", link) else Print("Error finding item") end
-				return orig(self, button, ...)
-			end
 
-			Print("Queueing ", link, "for sale at ", price)
-			tekauc:PostBatch(ids[link], price, stack)
+		local stacksize = IsShiftKeyDown() and 1 or select(2, GetContainerItemInfo(bag, slot))
+		local price = GetPrice(link, stacksize)
+		if not price then
+			if link then Print("Cannot find price for", link) else Print("Error finding item") end
+			return orig(self, button, ...)
 		end
+
+		tekauc:PostBatch(ids[link], price, stacksize)
 	else return orig(self, button, ...) end
 end
 
@@ -117,10 +136,10 @@ local bgFrame = {bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", insets =
 	tile = true, tileSize = 16, edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 16}
 
 local f = CreateFrame("Frame", nil, AuctionFrame)
-f:SetPoint("TOP", 0, 35)
+f:SetPoint("TOP", 0, 13)
 f:SetPoint("RIGHT", -25, 0)
 f:SetWidth(248)
-f:SetHeight(75)
+f:SetHeight(53)
 f:SetFrameLevel(AuctionFrame:GetFrameLevel()-1)
 
 f:SetBackdrop(bgFrame)
@@ -152,29 +171,30 @@ end
 
 local butt1 = LibStub("tekKonfig-Button").new(f, "TOPLEFT", 4, -4)
 butt1:SetFrameLevel(AuctionFrame:GetFrameLevel()+1)
-butt1:SetText("Split Chants")
-butt1.tiptext = "Split enchant scroll stacks into singles"
+butt1:SetText("Sell Chants")
+butt1.tiptext = "Post all enchant scrolls in your bags as single-item auctions"
 butt1:SetScript("OnClick", function(self)
 	for bag=0,4 do
 		for slot=1,GetContainerNumSlots(bag) do
 			local link = GetContainerItemLink(bag, slot)
-			if IsEnchantScroll(link) and select(2, GetContainerItemInfo(bag, slot)) ~= 1 then
-				SlashCmdList.TEKSPLITTER(link.." 1")
+			if IsEnchantScroll(link) then
+				local price = GetPrice(link, 1)
+				if price then tekauc:PostBatch(ids[link], price, 1) end
 			end
 		end
 	end
 end)
 
 
-local butt2 = LibStub("tekKonfig-Button").new(f, "TOP", butt1, "BOTTOM")
+local butt2 = LibStub("tekKonfig-Button").new(f, "LEFT", butt1, "RIGHT")
 butt2:SetFrameLevel(AuctionFrame:GetFrameLevel()+1)
-butt2:SetText("Sell Chants")
-butt2.tiptext = "Post all enchant scrolls in your bags"
+butt2:SetText("Sell Glyphs")
+butt2.tiptext = "Post all glyphs in your bags as single-item auctions"
 butt2:SetScript("OnClick", function(self)
 	for bag=0,4 do
 		for slot=1,GetContainerNumSlots(bag) do
 			local link = GetContainerItemLink(bag, slot)
-			if IsEnchantScroll(link) and select(2, GetContainerItemInfo(bag, slot)) == 1 then
+			if link and select(6, GetItemInfo(link)) == "Glyph" then
 				local price = GetPrice(link, 1)
 				if price then tekauc:PostBatch(ids[link], price, 1) end
 			end
@@ -183,40 +203,7 @@ butt2:SetScript("OnClick", function(self)
 end)
 
 
-local butt3 = LibStub("tekKonfig-Button").new(f, "LEFT", butt1, "RIGHT", 0, 0)
-butt3:SetFrameLevel(AuctionFrame:GetFrameLevel()+1)
-butt3:SetText("Split Glyphs")
-butt3.tiptext = "Split glyph stacks into singles"
-butt3:SetScript("OnClick", function(self)
-	for bag=0,4 do
-		for slot=1,GetContainerNumSlots(bag) do
-			local link = GetContainerItemLink(bag, slot)
-			if link and select(6, GetItemInfo(link)) == "Glyph" and select(2, GetContainerItemInfo(bag, slot)) ~= 1 then
-				SlashCmdList.TEKSPLITTER(link.." 1")
-			end
-		end
-	end
-end)
-
-
-local butt4 = LibStub("tekKonfig-Button").new(f, "TOP", butt3, "BOTTOM")
-butt4:SetFrameLevel(AuctionFrame:GetFrameLevel()+1)
-butt4:SetText("Sell Glyphs")
-butt4.tiptext = "Post all single-stack glyphs in your bags"
-butt4:SetScript("OnClick", function(self)
-	for bag=0,4 do
-		for slot=1,GetContainerNumSlots(bag) do
-			local link = GetContainerItemLink(bag, slot)
-			if link and select(6, GetItemInfo(link)) == "Glyph" and select(2, GetContainerItemInfo(bag, slot)) == 1 then
-				local price = GetPrice(link, 1)
-				if price then tekauc:PostBatch(ids[link], price, 1) end
-			end
-		end
-	end
-end)
-
-
-local butt5 = LibStub("tekKonfig-Button").new(f, "LEFT", butt4, "RIGHT", 0, 0)
+local butt5 = LibStub("tekKonfig-Button").new(f, "LEFT", butt2, "RIGHT")
 butt5:SetFrameLevel(AuctionFrame:GetFrameLevel()+1)
 butt5:SetText("Sell Gems")
 butt5.tiptext = "Post all cut gems in your bags"
@@ -224,7 +211,7 @@ butt5:SetScript("OnClick", function(self)
 	for bag=0,4 do
 		for slot=1,GetContainerNumSlots(bag) do
 			local link = GetContainerItemLink(bag, slot)
-			if link and select(6, GetItemInfo(link)) == "Gem" and not blist:match(ids[link]) and select(2, GetContainerItemInfo(bag, slot)) == 1 then
+			if link and select(6, GetItemInfo(link)) == "Gem" and not blist:match(ids[link]) then
 				local price = GetPrice(link, 1)
 				if price then tekauc:PostBatch(ids[link], price, 1) end
 			end
