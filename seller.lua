@@ -25,20 +25,17 @@ local function finditem(id, size)
 end
 
 
+local time_indexes = { [12*60]=1, [24*60]=2, [48*60]=3}
 local function createauction(bag, slot, price, stacksize, time)
 	-- local bag, slot = finditem(id)
 	local link = GetContainerItemLink(bag, slot)
 	if not link then return end
 
 	local id = ids[link]
-	stacksize, time = stacksize or 1, time or 12*60
+	stacksize, time = stacksize or 1, time_indexes[time or 12*60]
 	local numstacks = math.floor(GetItemCount(id)/stacksize)
 	Debug("Posting auction", id, bag, slot, price, stacksize, numstacks, time)
 	Print("Posting", numstacks, "stacks of", link, "x"..stacksize, "for sale at", price)
-
-	local newtimeformat = { [12*60]=1, [24*60]=2, [48*60]=3}
-	time = newtimeformat[time]
-	Debug("time now == ".. time .. ", since Blizzard sucks at API changes!")
 
 	PickupContainerItem(bag, slot)
 
