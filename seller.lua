@@ -36,6 +36,10 @@ local function createauction(bag, slot, price, stacksize, time)
 	Debug("Posting auction", id, bag, slot, price, stacksize, numstacks, time)
 	Print("Posting", numstacks, "stacks of", link, "x"..stacksize, "for sale at", price)
 
+	local newtimeformat = { [12*60]=1, [24*60]=2, [48*60]=3}
+	time = newtimeformat[time]
+	Debug("time now == ".. time .. ", since Blizzard sucks at API changes!")
+
 	PickupContainerItem(bag, slot)
 
 	if GetCursorInfo() == "item" then
@@ -49,6 +53,7 @@ local function createauction(bag, slot, price, stacksize, time)
 	else
 		f:RegisterEvent("AUCTION_MULTISELL_UPDATE")
 	end
+
 	StartAuction(price, price, time, stacksize, numstacks)
 end
 
