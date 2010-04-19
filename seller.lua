@@ -31,18 +31,19 @@ local function createauction(bag, slot, price, stacksize, time)
 	local link = GetContainerItemLink(bag, slot)
 	if not link then return end
 
-	local id = ids[link]
-	stacksize, time = stacksize or 1, time_indexes[time or 12*60]
-	local numstacks = math.floor(GetItemCount(id)/stacksize)
-	Debug("Posting auction", id, bag, slot, price, stacksize, numstacks, time)
-	Print("Posting", numstacks, "stacks of", link, "x"..stacksize, "for sale at", price)
-
 	PickupContainerItem(bag, slot)
 
 	if GetCursorInfo() == "item" then
 		ClickAuctionSellItemButton()
 		ClearCursor()
 	end
+
+	local id = ids[link]
+	local _, _, _, _, _, _, _, stack, sellable = GetAuctionSellItemInfo()
+	stacksize, time = math.min(stacksize or 1, stack), time_indexes[time or 12*60]
+	local numstacks = math.floor(sellable/stacksize)
+	Debug("Posting auction", id, bag, slot, price, stacksize, numstacks, time)
+	Print("Posting", numstacks, "stacks of", link, "x"..stacksize, "for sale at", price)
 
 	if stacksize == 1 and numstacks == 1 then
 		pendingbag, pendingslot, batchitem, batchprice, batchstack = bag, slot, id, price, stack
