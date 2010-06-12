@@ -1,4 +1,6 @@
 
+local myname, ns = ...
+
 local INFLATION_LIMIT = 2.5 -- Maximum markup we'll allow over manually set prices
 local ids = LibStub("tekIDmemo")
 local mins, maxes, counts, lastseen = {}, {}, {}, {}
@@ -13,7 +15,10 @@ local enabled = true
 butt:SetScript("OnUpdate", function(self)
 	local _, scanable = CanSendAuctionQuery("list")
 	if enabled and not scanable then self:Disable()
-	elseif not enabled and scanable then self:Enable() end
+	elseif not enabled and scanable then
+		self:Enable()
+		for _,sellbutt in pairs(ns.sellbutts) do sellbutt:Disable() end
+	end
 	enabled = scanable
 end)
 
@@ -38,6 +43,7 @@ butt:SetScript("OnEvent", function(self)
 		end
 	end
 
+	for _,sellbutt in pairs(ns.sellbutts) do sellbutt:Enable() end
 	ChatFrame1:AddMessage("Done scanning ".. GetNumAuctionItems("list").. " items")
 end)
 

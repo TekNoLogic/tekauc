@@ -1,4 +1,5 @@
 
+local myname, ns = ...
 
 local function Print(...) ChatFrame1:AddMessage(string.join(" ", "|cFF33FF99tekauc seller|r:", ...)) end
 
@@ -175,6 +176,7 @@ end
 local butt1 = LibStub("tekKonfig-Button").new(f, "TOPLEFT", 4, -4)
 butt1:SetFrameLevel(AuctionFrame:GetFrameLevel()+1)
 butt1:SetText("Sell Chants")
+butt1:Disable()
 butt1.tiptext = "Post all enchant scrolls in your bags as single-item auctions"
 butt1:SetScript("OnClick", function(self)
 	for bag=0,4 do
@@ -192,6 +194,7 @@ end)
 local butt2 = LibStub("tekKonfig-Button").new(f, "LEFT", butt1, "RIGHT")
 butt2:SetFrameLevel(AuctionFrame:GetFrameLevel()+1)
 butt2:SetText("Sell Glyphs")
+butt2:Disable()
 butt2.tiptext = "Post all glyphs in your bags as single-item auctions"
 butt2:SetScript("OnClick", function(self)
 	for bag=0,4 do
@@ -209,6 +212,7 @@ end)
 local butt5 = LibStub("tekKonfig-Button").new(f, "LEFT", butt2, "RIGHT")
 butt5:SetFrameLevel(AuctionFrame:GetFrameLevel()+1)
 butt5:SetText("Sell Gems")
+butt5:Disable()
 butt5.tiptext = "Post all cut gems in your bags"
 butt5:SetScript("OnClick", function(self)
 	for bag=0,4 do
@@ -221,3 +225,5 @@ butt5:SetScript("OnClick", function(self)
 		end
 	end
 end)
+
+ns.sellbutts = {butt1, butt2, butt5}
