@@ -26,9 +26,11 @@ local function finditem(id, size)
 end
 
 
-local time_indexes = { [12*60]=1, [24*60]=2, [48*60]=3}
-local function createauction(bag, slot, price, stacksize, time)
-	-- local bag, slot = finditem(id)
+function tekauc:PostBatch(id, price, stacksize)
+	if price <= 0 then return end
+	local bag, slot = finditem(id)
+	if not bag or not slot then return end
+
 	local link = GetContainerItemLink(bag, slot)
 	if not link then return end
 
@@ -41,71 +43,13 @@ local function createauction(bag, slot, price, stacksize, time)
 
 	local id = ids[link]
 	local _, _, _, _, _, _, _, stack, sellable = GetAuctionSellItemInfo()
-	stacksize, time = math.min(stacksize or 1, stack), time_indexes[time or 12*60]
+	stacksize, time = math.min(stacksize or 1, stack), 1
 	local numstacks = math.floor(sellable/stacksize)
 	Debug("Posting auction", id, bag, slot, price, stacksize, numstacks, time)
 	Print("Posting", numstacks, "stacks of", link, "x"..stacksize, "for sale at", price)
 
-	if stacksize == 1 and numstacks == 1 then
-		pendingbag, pendingslot, batchitem, batchprice, batchstack = bag, slot, id, price, stack
-		f:RegisterEvent("BAG_UPDATE")
-	else
-		f:RegisterEvent("AUCTION_MULTISELL_UPDATE")
-	end
-
 	StartAuction(price, price, time, stacksize, numstacks)
 end
-
-
-local function processqueue()
-	Debug("Processing next item in queue")
-	local id, price, stack = table.remove(queue, 1), table.remove(queue, 1), table.remove(queue, 1)
-	if id and price and stack then
-		local bag, slot = finditem(id)
-		if bag and slot then createauction(bag, slot, price, stack)
-		else return processqueue() end
-	else
-		Debug("No more items in queue")
-	end
-end
-
-
-function tekauc:PostBatch(id, price, stack)
-	if price <= 0 then return end
-	table.insert(queue, id)
-	table.insert(queue, price)
-	table.insert(queue, stack)
-	if not batchitem then return processqueue() end
-end
-
-
-local elap = 0
-f:SetScript("OnShow", function(self) elap = 0 end)
-f:SetScript("OnHide", function(self) processqueue() end)
-f:SetScript("OnUpdate", function(self, e)
-	elap = elap + e
-	if elap >= 1 then self:Hide() end
-end)
-f:SetScript("OnEvent", function(self, event, ...)
-	if event == "AUCTION_MULTISELL_UPDATE" then
-		local posted, total = ...
-		if posted ~= total then return end
-
-		f:UnregisterEvent("AUCTION_MULTISELL_UPDATE")
-		f:Show()
-	else
-		local bag = ...
-		if bag ~= pendingbag or GetContainerItemLink(pendingbag, pendingslot) then return end
-
-		local bag, slot = finditem(batchitem, batchstack)
-		if (bag and slot) then return createauction(bag, slot, batchprice) end
-
-		pendingbag, pendingslot, batchitem, batchprice = nil
-		f:UnregisterEvent("BAG_UPDATE")
-
-		processqueue()
-	end
-end)
 
 
 local function GetPrice(link, stack)
@@ -184,7 +128,7 @@ butt1:SetScript("OnClick", function(self)
 			local link = GetContainerItemLink(bag, slot)
 			if IsEnchantScroll(link) then
 				local price = GetPrice(link, 1)
-				if price then tekauc:PostBatch(ids[link], price, 1) end
+				if price then return tekauc:PostBatch(ids[link], price, 1) end
 			end
 		end
 	end
@@ -202,7 +146,7 @@ butt2:SetScript("OnClick", function(self)
 			local link = GetContainerItemLink(bag, slot)
 			if link and select(6, GetItemInfo(link)) == "Glyph" then
 				local price = GetPrice(link, 1)
-				if price then tekauc:PostBatch(ids[link], price, 1) end
+				if price then return tekauc:PostBatch(ids[link], price, 1) end
 			end
 		end
 	end
@@ -220,7 +164,7 @@ butt5:SetScript("OnClick", function(self)
 			local link = GetContainerItemLink(bag, slot)
 			if link and select(6, GetItemInfo(link)) == "Gem" and not blist:match(ids[link]) then
 				local price = GetPrice(link, 1)
-				if price then tekauc:PostBatch(ids[link], price, 1) end
+				if price then return tekauc:PostBatch(ids[link], price, 1) end
 			end
 		end
 	end
