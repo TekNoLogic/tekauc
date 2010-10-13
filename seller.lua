@@ -120,7 +120,7 @@ end
 local orig = ContainerFrameItemButton_OnModifiedClick
 ContainerFrameItemButton_OnModifiedClick = function(self, button, ...)
 	if AuctionFrame:IsShown() and IsAltKeyDown() then
-		local bag, slot = this:GetParent():GetID(), this:GetID()
+		local bag, slot = self:GetParent():GetID(), self:GetID()
 		local link = bag and slot and GetContainerItemLink(bag, slot)
 
 		local stacksize = IsShiftKeyDown() and 1 or select(2, GetContainerItemInfo(bag, slot))
