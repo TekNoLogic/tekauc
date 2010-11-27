@@ -3,7 +3,7 @@ local myname, ns = ...
 
 local INFLATION_LIMIT = 2.5 -- Maximum markup we'll allow over manually set prices
 local ids = LibStub("tekIDmemo")
-local mins, maxes, counts, lastseen = {}, {}, {}, {}
+local mins, maxes, counts, lastseen, allscan = {}, {}, {}, {}
 
 tekauc.mins, tekauc.maxes, tekauc.counts = mins, maxes, counts
 
@@ -26,15 +26,22 @@ butt:SetScript("OnClick", function(self)
 	ChatFrame1:AddMessage("Sending all-scan query")
 	mins, maxes, counts = {}, {}, {}
 	tekauc.mins, tekauc.maxes, tekauc.counts = mins, maxes, counts
+	allscan = true
 	QueryAuctionItems(nil, nil, nil, nil, nil, nil, nil, nil, nil, true)
-	self:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
 end)
 
+butt:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
 butt:SetScript("OnEvent", function(self)
-	self:UnregisterEvent("AUCTION_ITEM_LIST_UPDATE")
-	for i=1,GetNumAuctionItems("list") do
+	local num, total = GetNumAuctionItems("list")
+	if num ~= total then return end
+
+	local touched = {}
+
+	for i=1,num do
 		local name, texture, count, quality, canUse, level, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner = GetAuctionItemInfo("list", i)
 		local id = ids[GetAuctionItemLink("list", i)]
+
+		if not allscan and not touched[id] then touched[id], mins[id], maxes[id], counts[id] = true end -- Wipe these results if it's a short scan
 		buyoutPrice = buyoutPrice / count
 		if buyoutPrice > 0 and (not tekauc.manualprices[id] or (tekauc.manualprices[id] * INFLATION_LIMIT) >= buyoutPrice) then
 			if (mins[id] or 9999999999) > buyoutPrice then mins[id] = buyoutPrice end
@@ -44,7 +51,8 @@ butt:SetScript("OnEvent", function(self)
 	end
 
 	for _,sellbutt in pairs(ns.sellbutts) do sellbutt:Enable() end
-	ChatFrame1:AddMessage("Done scanning ".. GetNumAuctionItems("list").. " items")
+	if allscan then ChatFrame1:AddMessage("Done scanning ".. num.. " items") end
+	allscan = false
 end)
 
 
