@@ -1,6 +1,8 @@
 
 local myname, ns = ...
 
+local TIME = 1 -- Which duration to post for.  1 == 12hr
+
 local function Print(...) ChatFrame1:AddMessage(string.join(" ", "|cFF33FF99tekauc seller|r:", ...)) end
 
 local debugf = tekDebug and tekDebug:GetFrame("tekauc_seller")
@@ -43,12 +45,12 @@ function tekauc:PostBatch(id, price, stacksize)
 
 	local id = ids[link]
 	local _, _, _, _, _, _, _, stack, sellable = GetAuctionSellItemInfo()
-	stacksize, time = math.min(stacksize or 1, stack), 1
+	stacksize = math.min(stacksize or 1, stack)
 	local numstacks = math.floor(sellable/stacksize)
-	Debug("Posting auction", id, bag, slot, price, stacksize, numstacks, time)
+	Debug("Posting auction", id, bag, slot, price, stacksize, numstacks, TIME)
 	Print("Posting", numstacks, "stacks of", link, "x"..stacksize, "for sale at", price)
 
-	StartAuction(price, price, time, stacksize, numstacks)
+	StartAuction(price, price, TIME, stacksize, numstacks)
 end
 
 
