@@ -39,6 +39,7 @@ function tekauc:PostBatch(id, price, stacksize)
 	PickupContainerItem(bag, slot)
 
 	if GetCursorInfo() == "item" then
+		AuctionFrameAuctions.duration = TIME -- Just so the default auction UI doesn't throw a stupid error
 		ClickAuctionSellItemButton()
 		ClearCursor()
 	end
