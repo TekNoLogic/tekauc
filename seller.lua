@@ -2,6 +2,7 @@
 local myname, ns = ...
 
 local TIME = 1 -- Which duration to post for.  1 == 12hr
+local searched = {}
 
 local function Print(...) ChatFrame1:AddMessage(string.join(" ", "|cFF33FF99tekauc seller|r:", ...)) end
 
@@ -69,9 +70,17 @@ ContainerFrameItemButton_OnModifiedClick = function(self, button, ...)
 	if AuctionFrame:IsShown() and IsAltKeyDown() then
 		local bag, slot = self:GetParent():GetID(), self:GetID()
 		local link = bag and slot and GetContainerItemLink(bag, slot)
+		local id = link and ids[link]
 
 		local stacksize = IsShiftKeyDown() and 1 or select(2, GetContainerItemInfo(bag, slot))
 		local price = GetPrice(link, stacksize)
+		if id and not tekauc.mins[id] and not searched[id] then
+			searched[id] = true
+			local name = GetItemInfo(id)
+			QueryAuctionItems(name)
+			return
+		end
+
 		if not price then
 			if link then Print("Cannot find price for", link) else Print("Error finding item") end
 			return orig(self, button, ...)
