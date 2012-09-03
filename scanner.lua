@@ -23,7 +23,7 @@ butt:SetScript("OnUpdate", function(self)
 end)
 
 butt:SetScript("OnClick", function(self)
-	ChatFrame1:AddMessage("Sending all-scan query")
+	ns.Print("Sending all-scan query", GetTime())
 	mins, maxes, counts = {}, {}, {}
 	tekauc.mins, tekauc.maxes, tekauc.counts = mins, maxes, counts
 	allscan = true

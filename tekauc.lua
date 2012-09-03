@@ -3,6 +3,8 @@
 --      Locals      --
 ----------------------
 
+local myname, ns = ...
+
 local L = setmetatable({}, {__index=function(t,i) return i end})
 local defaults, defaultsPC, db, dbpc = {}, {items = ""}
 local items = {}
@@ -96,7 +98,7 @@ end
 --      Util Functions      --
 ------------------------------
 
-function tekauc:Print(...) ChatFrame1:AddMessage(string.join(" ", "|cFF33FF99tekauc|r:", ...)) end
+function ns.Print(...) ChatFrame1:AddMessage(string.join(" ", "|cFF33FF99tekauc|r:", ...)) end
 
 local debugf = tekDebug and tekDebug:GetFrame("tekauc")
 function tekauc:Debug(...) if debugf then debugf:AddMessage(string.join(", ", ...)) end end
