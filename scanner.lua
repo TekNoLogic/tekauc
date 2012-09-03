@@ -41,7 +41,9 @@ butt:SetScript("OnEvent", function(self)
 	local touched = {}
 
 	for i=1,num do
-		local name, texture, count, quality, canUse, level, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner = GetAuctionItemInfo("list", i)
+		local name, texture, count, quality, canUse, level, levelColHeader, minBid,
+			minIncrement, buyoutPrice, bidAmount, highBidder, owner, saleStatus,
+			itemId, hasAllInfo = GetAuctionItemInfo("list", i)
 		local id = ids[GetAuctionItemLink("list", i)]
 
 		if not allscan and not touched[id] then touched[id], mins[id], maxes[id], counts[id] = true end -- Wipe these results if it's a short scan
