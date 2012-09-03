@@ -35,6 +35,9 @@ butt:SetScript("OnEvent", function(self)
 	local num, total = GetNumAuctionItems("list")
 	if num ~= total then return end
 
+	local starttime = GetTime()
+	if allscan then ns.Print("Starting scan") end
+
 	local touched = {}
 
 	for i=1,num do
@@ -51,7 +54,11 @@ butt:SetScript("OnEvent", function(self)
 	end
 
 	for _,sellbutt in pairs(ns.sellbutts) do sellbutt:Enable() end
-	if allscan then ChatFrame1:AddMessage("Done scanning ".. num.. " items") end
+	if allscan then
+		local elap = GetTime() - starttime
+		ns.Print("Done scanning: ", num, "items in", elap, "seconds")
+	end
+
 	allscan = false
 end)
 
