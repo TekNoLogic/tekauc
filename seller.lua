@@ -77,6 +77,8 @@ ContainerFrameItemButton_OnModifiedClick = function(self, button, ...)
 		if id and not tekauc.mins[id] and not searched[id] then
 			searched[id] = true
 			local name = GetItemInfo(id)
+			BrowseName:SetText(name)
+			AuctionFrameBrowse.page = 0
 			QueryAuctionItems(name)
 			return
 		end
