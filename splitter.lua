@@ -1,5 +1,6 @@
 
-local ids = LibStub("tekIDmemo")
+local myname, ns = ...
+
 
 local function Print(...) ChatFrame1:AddMessage(string.join(" ", "|cFF33FF99tekauc splitter|r:", ...)) end
 
@@ -21,7 +22,7 @@ local function teksplit()
 	for bag=0,4 do
 		for slot=1,GetContainerNumSlots(bag) do
 			local link = GetContainerItemLink(bag, slot)
-			if link and ids[link] == id then
+			if link and ns.ids[link] == id then
 				local _, qty = GetContainerItemInfo(bag, slot)
 				if qty > size then
 					local ebag, eslot = findempty()

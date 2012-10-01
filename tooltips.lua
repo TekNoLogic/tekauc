@@ -1,6 +1,6 @@
 
 
-local ids = LibStub("tekIDmemo")
+local myname, ns = ...
 
 
 local origs = {}
@@ -9,7 +9,7 @@ local OnTooltipSetItem = function(frame, ...)
 
 	local _, link = frame:GetItem()
 	if link then
-		local id = ids[link]
+		local id = ns.ids[link]
 		local min, max, count = tekauc.mins[id], tekauc.maxes[id], tekauc.counts[id]
 		local _, _, _, _, _, _, _, maxStack = GetItemInfo(id)
 		if min then frame:AddDoubleLine("AH buyout:", max and max ~= min and (tekauc:GS(min).." - "..tekauc:GS(max)) or tekauc:GS(min)) end

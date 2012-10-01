@@ -10,9 +10,6 @@ local debugf = tekDebug and tekDebug:GetFrame("tekauc_seller")
 local function Debug(...) if debugf then debugf:AddMessage(string.join(", ", ...)) end end
 
 
-local ids = LibStub("tekIDmemo")
-
-
 local pendingbag, pendingslot, batchitem, batchprice
 local f = CreateFrame("Frame")
 f:Hide()
@@ -23,7 +20,7 @@ local function finditem(id, size)
 	for bag=0,4 do
 		for slot=1,GetContainerNumSlots(bag) do
 			local link = GetContainerItemLink(bag, slot)
-			if link and ids[link] == id then return bag, slot end
+			if link and ns.ids[link] == id then return bag, slot end
 		end
 	end
 end
@@ -45,7 +42,7 @@ function tekauc:PostBatch(id, price, stacksize)
 		ClearCursor()
 	end
 
-	local id = ids[link]
+	local id = ns.ids[link]
 	local _, _, _, _, _, _, _, stack, sellable = GetAuctionSellItemInfo()
 	stacksize = math.min(stacksize or 1, stack)
 	local numstacks = math.floor(sellable/stacksize)
@@ -70,7 +67,7 @@ ContainerFrameItemButton_OnModifiedClick = function(self, button, ...)
 	if AuctionFrame:IsShown() and IsAltKeyDown() then
 		local bag, slot = self:GetParent():GetID(), self:GetID()
 		local link = bag and slot and GetContainerItemLink(bag, slot)
-		local id = link and ids[link]
+		local id = link and ns.ids[link]
 
 		local stacksize = IsShiftKeyDown() and 1 or select(2, GetContainerItemInfo(bag, slot))
 		local price = GetPrice(link, stacksize)
@@ -88,7 +85,7 @@ ContainerFrameItemButton_OnModifiedClick = function(self, button, ...)
 			return orig(self, button, ...)
 		end
 
-		tekauc:PostBatch(ids[link], price, stacksize)
+		tekauc:PostBatch(ns.ids[link], price, stacksize)
 	else return orig(self, button, ...) end
 end
 
@@ -144,7 +141,7 @@ butt1:SetScript("OnClick", function(self)
 			local link = GetContainerItemLink(bag, slot)
 			if IsEnchantScroll(link) then
 				local price = GetPrice(link, 1)
-				if price then return tekauc:PostBatch(ids[link], price, 1) end
+				if price then return tekauc:PostBatch(ns.ids[link], price, 1) end
 			end
 		end
 	end
@@ -162,7 +159,7 @@ butt2:SetScript("OnClick", function(self)
 			local link = GetContainerItemLink(bag, slot)
 			if link and select(6, GetItemInfo(link)) == "Glyph" then
 				local price = GetPrice(link, 1)
-				if price then return tekauc:PostBatch(ids[link], price, 1) end
+				if price then return tekauc:PostBatch(ns.ids[link], price, 1) end
 			end
 		end
 	end
@@ -178,9 +175,9 @@ butt5:SetScript("OnClick", function(self)
 	for bag=0,4 do
 		for slot=1,GetContainerNumSlots(bag) do
 			local link = GetContainerItemLink(bag, slot)
-			if link and select(6, GetItemInfo(link)) == "Gem" and not blist:match(ids[link]) then
+			if link and select(6, GetItemInfo(link)) == "Gem" and not blist:match(ns.ids[link]) then
 				local price = GetPrice(link, 1)
-				if price then return tekauc:PostBatch(ids[link], price, 1) end
+				if price then return tekauc:PostBatch(ns.ids[link], price, 1) end
 			end
 		end
 	end

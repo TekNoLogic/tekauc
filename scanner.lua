@@ -2,7 +2,6 @@
 local myname, ns = ...
 
 local INFLATION_LIMIT = 2.5 -- Maximum markup we'll allow over manually set prices
-local ids = LibStub("tekIDmemo")
 local mins, maxes, counts, lastseen, allscan = {}, {}, {}, {}
 
 tekauc.mins, tekauc.maxes, tekauc.counts = mins, maxes, counts
@@ -67,7 +66,7 @@ end)
 -- Global API for any addon to query prices
 local orig = GetAuctionBuyout
 function GetAuctionBuyout(item)
-	local id = ids[item]
+	local id = ns.ids[item]
 	if id and mins[id] then return mins[id] end
 	if id and tekauc.manualprices[id] then return tekauc.manualprices[id] end
 	if orig then return orig(item) end
