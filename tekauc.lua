@@ -21,7 +21,7 @@ tekauc:Hide()
 
 
 function tekauc:ADDON_LOADED(event, addon)
-	if addon ~= "tekauc" then return end
+	if addon ~= myname then return end
 
 	tekaucDB, tekaucDBPC = setmetatable(tekaucDB or {}, {__index = defaults}), setmetatable(tekaucDBPC or {}, {__index = defaultsPC})
 	db, dbpc = tekaucDB, tekaucDBPC
