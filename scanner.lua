@@ -41,8 +41,8 @@ butt:SetScript("OnEvent", function(self)
 
 	for i=1,num do
 		local name, texture, count, quality, canUse, level, levelColHeader, minBid,
-			minIncrement, buyoutPrice, bidAmount, highBidder, owner, saleStatus, id,
-			hasAllInfo = GetAuctionItemInfo("list", i)
+			minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName, owner,
+			ownerFullName, saleStatus, id, hasAllInfo = GetAuctionItemInfo("list", i)
 
 		if not allscan and not touched[id] then touched[id], mins[id], maxes[id], counts[id] = true end -- Wipe these results if it's a short scan
 		buyoutPrice = buyoutPrice / count
