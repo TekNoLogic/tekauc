@@ -32,7 +32,7 @@ end)
 butt:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
 butt:SetScript("OnEvent", function(self)
 	local num, total = GetNumAuctionItems("list")
-	if num ~= total then return end
+	if total < 10000000 and num ~= total then return end
 
 	local starttime = GetTime()
 	if allscan then ns.Print("Starting scan") end
