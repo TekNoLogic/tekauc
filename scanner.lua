@@ -48,12 +48,14 @@ butt:SetScript("OnUpdate", function(self)
 		local endindex = nextblock + BLOCKSIZE
 		if endindex > totalresults then endindex = totalresults end
 
+		self:SetText(string.format("%d%% done", 100.0 * nextblock / totalresults))
 		ScanBlock(nextblock, endindex)
 
 		if endindex == totalresults then
 			for _,sellbutt in pairs(ns.sellbutts) do sellbutt:Enable() end
 			local elap = GetTime() - starttime
 			ns.Print("Done scanning: ", totalresults, "items in", elap, "seconds")
+			self:SetText("Scan All")
 
 			allscaninprogress = false
 			totalresults, nextblock, starttime = nil
@@ -76,6 +78,7 @@ local allscanpending, querytime
 butt:SetScript("OnClick", function(self)
 	querytime = GetTime()
 	ns.Print("Sending all-scan query")
+	self:SetText("Querying...")
 	mins, maxes, counts = {}, {}, {}
 	tekauc.mins, tekauc.maxes, tekauc.counts = mins, maxes, counts
 	allscanpending = true
