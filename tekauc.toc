@@ -16,6 +16,8 @@
 ## LoadOnDemand: 1
 ## LoadWith: Blizzard_AuctionUI
 
+externals\print.lua
+
 LibStub.lua
 tekKonfigAboutPanel.lua
 tekKonfigButton.lua

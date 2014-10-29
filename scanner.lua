@@ -54,7 +54,7 @@ butt:SetScript("OnUpdate", function(self)
 		if endindex == totalresults then
 			for _,sellbutt in pairs(ns.sellbutts) do sellbutt:Enable() end
 			local elap = GetTime() - starttime
-			ns.Print("Done scanning: ", totalresults, "items in", elap, "seconds")
+			ns.Printf("Done scanning: %d items in %.01f seconds", totalresults, elap)
 			self:SetText("Scan All")
 
 			allscaninprogress = false
@@ -97,7 +97,7 @@ butt:SetScript("OnEvent", function(self)
 		starttime = GetTime()
 		touched, totalresults, nextblock = {}, num, 1
 		nexttick = starttime
-		ns.Print("Server response", starttime - querytime, "seconds")
+		ns.Printf("Server response %.01f seconds", starttime - querytime)
 		ns.Print("Starting scan")
 	elseif not allscaninprogress and num < 5000 then
 		touched, totalresults, nextblock = {}, num, 1

@@ -4,8 +4,6 @@ local myname, ns = ...
 local TIME = 1 -- Which duration to post for.  1 == 12hr
 local searched = {}
 
-local function Print(...) ChatFrame1:AddMessage(string.join(" ", "|cFF33FF99tekauc seller|r:", ...)) end
-
 local debugf = tekDebug and tekDebug:GetFrame("tekauc_seller")
 local function Debug(...) if debugf then debugf:AddMessage(string.join(", ", ...)) end end
 
@@ -81,7 +79,7 @@ ContainerFrameItemButton_OnModifiedClick = function(self, button, ...)
 		end
 
 		if not price then
-			if link then Print("Cannot find price for", link) else Print("Error finding item") end
+			if link then ns.Print("Cannot find price for", link) else ns.Print("Error finding item") end
 			return orig(self, button, ...)
 		end
 

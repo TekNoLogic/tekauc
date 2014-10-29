@@ -2,9 +2,6 @@
 local myname, ns = ...
 
 
-local function Print(...) ChatFrame1:AddMessage(string.join(" ", "|cFF33FF99tekauc splitter|r:", ...)) end
-
-
 local function findempty()
 	for bag=0,4 do
 		for slot=1,GetContainerNumSlots(bag) do
@@ -63,9 +60,8 @@ end)
 SLASH_TEKSPLITTER1 = "/split"
 SlashCmdList.TEKSPLITTER = function(input)
 	local id, size = string.match(input, "item:(%d+):.*%|h%|r%s*([%d]+)%s*$")
-	if not id or not size then return Print("Usage: /split [Item Link] size") end
+	if not id or not size then return ns.Print("Usage: /split [Item Link] size") end
 	table.insert(idqueue, tonumber(id))
 	table.insert(sizequeue, tonumber(size))
 	if #idqueue == 1 then teksplit() end
 end
-

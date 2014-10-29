@@ -98,8 +98,6 @@ end
 --      Util Functions      --
 ------------------------------
 
-function ns.Print(...) ChatFrame1:AddMessage(string.join(" ", "|cFF33FF99tekauc|r:", ...)) end
-
 local debugf = tekDebug and tekDebug:GetFrame("tekauc")
 function tekauc:Debug(...) if debugf then debugf:AddMessage(string.join(", ", ...)) end end
 
