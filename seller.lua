@@ -45,7 +45,7 @@ function tekauc:PostBatch(id, price, stacksize)
 	stacksize = math.min(stacksize or 1, stack)
 	local numstacks = math.floor(sellable/stacksize)
 	Debug("Posting auction", id, bag, slot, price, stacksize, numstacks, TIME)
-	Print("Posting", numstacks, "stacks of", link, "x"..stacksize, "for sale at", price)
+	ns.Print("Posting", numstacks, "stacks of", link, "x"..stacksize, "for sale at", ns.GS(price))
 
 	StartAuction(price, price, TIME, stacksize, numstacks)
 end

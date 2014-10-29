@@ -16,6 +16,7 @@
 ## LoadOnDemand: 1
 ## LoadWith: Blizzard_AuctionUI
 
+externals\gsc.lua
 externals\print.lua
 
 LibStub.lua
