@@ -23,6 +23,10 @@ local function finditem(id, size)
 	end
 end
 
+local processing = {}
+local function ClearProcessing()
+	wipe(processing)
+end
 
 function tekauc:PostBatch(id, price, stacksize)
 	if price <= 0 then return end
@@ -48,6 +52,13 @@ function tekauc:PostBatch(id, price, stacksize)
 	ns.Print("Posting", numstacks, "stacks of", link, "x"..stacksize, "for sale at", ns.GS(price))
 
 	StartAuction(price, price, TIME, stacksize, numstacks)
+
+	if not next(processing) then C_Timer.After(4, ClearProcessing) end
+	if numstacks == 1 then
+		processing[id] = true
+	else
+		processing.batch = true
+	end
 end
 
 
@@ -158,9 +169,13 @@ butt2:SetScript("OnClick", function(self)
 	for bag=0,4 do
 		for slot=1,GetContainerNumSlots(bag) do
 			local link = GetContainerItemLink(bag, slot)
-			if link and select(6, GetItemInfo(link)) == "Glyph" then
-				local price = GetPrice(link, 1)
-				if price then return tekauc:PostBatch(ns.ids[link], price, 1) end
+			if link then
+				local id = ns.ids[link]
+				local skip = processing[id] or processing.batch
+				if not skip and select(6, GetItemInfo(link)) == "Glyph" then
+					local price = GetPrice(link, 1)
+					if price then return tekauc:PostBatch(ns.ids[link], price, 1) end
+				end
 			end
 		end
 	end
