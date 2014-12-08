@@ -1,7 +1,7 @@
 
 local myname, ns = ...
 
-local GOLD, SILVER, COPPER = "|cffffd700%d", "|cffc7c7cf%02d", "|cffeda55f%02d"
+local GOLD, SILVER, COPPER = "|cffffd700%s", "|cffc7c7cf%02d", "|cffeda55f%02d"
 
 local GSC = string.join('.', GOLD, SILVER, COPPER)
 local GS  = string.join('.', GOLD, SILVER)
@@ -19,17 +19,18 @@ function ns.GSC(cash, colorblind)
 	if not cash then return end
 
 	local g, s, c = floor(cash/10000), floor((cash/100)%100), cash%100
+	local g2 = BreakUpLargeNumbers(g)
 
 	if colorblind or GetCVarBool("colorblindMode") then
-		if g > 0 then return string.format(GSC, g, s, c)
+		if g > 0 then return string.format(GSC, g2, s, c)
 		elseif s > 0 then return string.format(SC, s, c)
 		else return string.format(COPPER, c) end
 	else
-		if g > 0 and s == 0 and c == 0 then return string.format(GOLD, g)
-		elseif g > 99999 then return string.format(GS, g, s)
-		elseif g > 0 and c == 0 then return string.format(GS, g, s)
-		elseif g > 0 then return string.format(GSC, g, s, c)
-		elseif s > 0 and c == 0 then return string.format(SILVER, s)
+		if g > 0 and s == 0 and c == 0 then return string.format(GOLD, g2)
+		elseif g > 99999 then return string.format(GOLD, g2)
+		elseif g > 0 and c == 0 then return string.format(GS, g2, s)
+		elseif g > 0 then return string.format(GSC, g2, s, c)
+		elseif s > 0 and c == 0 then return string.format(GS, 0, s)
 		elseif s > 0 then return string.format(SC, s, c)
 		else return string.format(COPPER, c) end
 	end
