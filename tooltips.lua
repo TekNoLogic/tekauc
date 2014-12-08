@@ -12,10 +12,26 @@ local OnTooltipSetItem = function(frame, ...)
 		local id = ns.ids[link]
 		local min, max, count = tekauc.mins[id], tekauc.maxes[id], tekauc.counts[id]
 		local _, _, _, _, _, _, _, maxStack = GetItemInfo(id)
-		if min then frame:AddDoubleLine("AH buyout:", max and max ~= min and (ns.GS(min).." - "..ns.GS(max)) or ns.GS(min)) end
-		if min and (maxStack or 0) > 1 then frame:AddDoubleLine("AH stack buyout:", max and max ~= min and (ns.GS(min*maxStack).." - "..ns.GS(max*maxStack)) or ns.GS(min*maxStack)) end
-		if count then frame:AddDoubleLine("Number on AH:", count)
-		elseif tekauc.manualprices[id] then frame:AddDoubleLine("Manual price:", ns.GS(tekauc.manualprices[id])) end
+
+		if min then
+			local buyout = ns.GS(min)
+			if max and max ~= min then buyout = buyout.." - "..ns.GS(max) end
+			frame:AddDoubleLine("AH buyout:", buyout)
+
+			if (maxStack or 0) > 1 then
+				local stackbuyout = ns.GS(min*maxStack)
+				if max and max ~= min then
+					stackbuyout = stackbuyout.." - "..ns.GS(max*maxStack)
+				end
+				frame:AddDoubleLine("AH stack buyout:", stackbuyout)
+			end
+		end
+
+		if count then
+			frame:AddDoubleLine("Number on AH:", count)
+		elseif tekauc.manualprices[id] then
+			frame:AddDoubleLine("Manual price:", ns.GS(tekauc.manualprices[id]))
+		end
 
 		local owner = frame:GetOwner()
 		if frame == GameTooltip and min and owner and owner.hasItem and AuctionFrame:IsVisible() and owner:GetParent():GetID() ~= KEYRING_CONTAINER then
