@@ -182,21 +182,28 @@ butt2:SetScript("OnClick", function(self)
 end)
 
 
-local butt5 = LibStub("tekKonfig-Button").new(f, "LEFT", butt2, "RIGHT")
-butt5:SetFrameLevel(AuctionFrame:GetFrameLevel()+1)
-butt5:SetText("Sell Gems")
-butt5:Disable()
-butt5.tiptext = "Post all cut gems in your bags"
-butt5:SetScript("OnClick", function(self)
+local WEAPON, ARMOR = GetAuctionItemClasses()
+local butt3 = LibStub("tekKonfig-Button").new(f, "LEFT", butt2, "RIGHT")
+butt3:SetFrameLevel(AuctionFrame:GetFrameLevel()+1)
+butt3:SetText("Sell BoEs")
+butt3:Disable()
+butt3.tiptext = "Post all Bind on Equip equipment in your bags"
+butt3:SetScript("OnClick", function(self)
 	for bag=0,4 do
 		for slot=1,GetContainerNumSlots(bag) do
 			local link = GetContainerItemLink(bag, slot)
-			if link and select(6, GetItemInfo(link)) == "Gem" and not blist:match(ns.ids[link]) then
-				local price = GetPrice(link, 1)
-				if price then return tekauc:PostBatch(ns.ids[link], price, 1) end
+			if link then
+				local id = ns.ids[link]
+				local skip = processing[id] or processing.batch
+				skip = skip or not ns.IsBindOnEquip(bag, slot)
+				local _, _, _, _, _, itemtype = GetItemInfo(link)
+				if not skip and (itemtype == ARMOR or itemtype == WEAPON) then
+					local price = GetPrice(link, 1)
+					if price then return tekauc:PostBatch(ns.ids[link], price, 1) end
+				end
 			end
 		end
 	end
 end)
 
-ns.sellbutts = {butt1, butt2, butt5}
+ns.sellbutts = {butt1, butt2, butt3}

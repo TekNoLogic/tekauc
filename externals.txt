@@ -1,2 +1,4 @@
+bound.lua
 gsc.lua
 print.lua
+tooltip_scanner.lua
