@@ -39,11 +39,25 @@ end
 
 
 local enabled = true
-local BLOCKSIZE = 100 - 1
-local TICKLENGTH = 0.5
-local totalresults, nextblock, starttime, nexttick
-butt:SetScript("OnUpdate", function(self)
-	-- First check if we need to process a block of results
+local BLOCKSIZE = 40
+local TICKLENGTH = 0.1
+local totalresults, nextblock, starttime, nexttick, throttle
+butt:SetScript("OnUpdate", function(self, elap)
+	-- Once per second we check our framerate and adjust or scan speed
+	if allscaninprogress then
+		throttle = (throttle or 1) - elap
+		if throttle < 0 then
+			throttle = 1
+			local fps = GetFramerate()
+			if fps < 10 then
+				BLOCKSIZE = math.floor(BLOCKSIZE * .75)
+			elseif fps > 30 then
+				BLOCKSIZE = BLOCKSIZE + 1
+			end
+		end
+	end
+
+	-- check if we need to process a block of results
 	if allscaninprogress and nexttick <= GetTime() then
 		local endindex = nextblock + BLOCKSIZE
 		if endindex > totalresults then endindex = totalresults end
