@@ -82,7 +82,8 @@ butt:SetScript("OnClick", function(self)
 	mins, maxes, counts = {}, {}, {}
 	tekauc.mins, tekauc.maxes, tekauc.counts = mins, maxes, counts
 	allscanpending = true
-	QueryAuctionItems(nil, nil, nil, nil, nil, nil, nil, nil, nil, true)
+	SortAuctionClearSort("list")
+	QueryAuctionItems("", nil, nil, 0, nil, nil, true, false, nil)
 end)
 
 butt:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
