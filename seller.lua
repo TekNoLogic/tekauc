@@ -182,7 +182,8 @@ butt2:SetScript("OnClick", function(self)
 end)
 
 
-local WEAPON, ARMOR = GetAuctionItemClasses()
+local WEAPON = GetItemClassInfo(2)
+local ARMOR = GetItemClassInfo(4)
 local butt3 = LibStub("tekKonfig-Button").new(f, "LEFT", butt2, "RIGHT")
 butt3:SetFrameLevel(AuctionFrame:GetFrameLevel()+1)
 butt3:SetText("Sell BoEs")
