@@ -39,8 +39,8 @@ end
 
 
 local enabled = true
-local BLOCKSIZE = 1000 - 1
-local TICKLENGTH = 0.15
+local BLOCKSIZE = 100 - 1
+local TICKLENGTH = 0.5
 local totalresults, nextblock, starttime, nexttick
 butt:SetScript("OnUpdate", function(self)
 	-- First check if we need to process a block of results
