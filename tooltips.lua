@@ -8,8 +8,8 @@ local OnTooltipSetItem = function(frame, ...)
 	assert(frame, "arg 1 is nil, someone isn't hooking correctly")
 
 	local _, link = frame:GetItem()
-	if link then
-		local id = ns.ids[link]
+	local id = link and ns.ids[link]
+	if id then
 		local min, max, count = tekauc.mins[id], tekauc.maxes[id], tekauc.counts[id]
 		local _, _, _, _, _, _, _, maxStack = GetItemInfo(id)
 
