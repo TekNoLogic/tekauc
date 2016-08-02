@@ -2,9 +2,11 @@
 local myname, ns = ...
 
 local INFLATION_LIMIT = 2.5 -- Maximum markup we'll allow over manually set prices
-local mins, maxes, counts, lastseen = {}, {}, {}, {}
+local maxes, counts, lastseen = {}, {}, {}
 local allscaninprogress, touched
+local mins = tekauc_data or {}
 
+tekauc_data = mins
 tekauc.mins, tekauc.maxes, tekauc.counts = mins, maxes, counts
 
 
@@ -63,6 +65,7 @@ butt:SetScript("OnUpdate", function(self, elap)
 		if endindex > totalresults then endindex = totalresults end
 
 		self:SetText(string.format("%d%% done", 100.0 * nextblock / totalresults))
+		local t = GetTime()
 		ScanBlock(nextblock, endindex)
 
 		if endindex == totalresults then
@@ -71,6 +74,7 @@ butt:SetScript("OnUpdate", function(self, elap)
 			ns.Printf("Done scanning: %d items in %.01f seconds", totalresults, elap)
 			self:SetText("Scan All")
 
+			ns.scannedall = true
 			allscaninprogress = false
 			totalresults, nextblock, starttime = nil
 		else
@@ -80,7 +84,7 @@ butt:SetScript("OnUpdate", function(self, elap)
 	end
 
 	local _, scanable = CanSendAuctionQuery("list")
-	if enabled and not scanable then self:Disable()
+	if allscaninprogress or (enabled and not scanable) then self:Disable()
 	elseif not enabled and scanable then
 		self:Enable()
 		for _,sellbutt in pairs(ns.sellbutts) do sellbutt:Disable() end
@@ -95,6 +99,7 @@ butt:SetScript("OnClick", function(self)
 	self:SetText("Querying...")
 	mins, maxes, counts = {}, {}, {}
 	tekauc.mins, tekauc.maxes, tekauc.counts = mins, maxes, counts
+	tekauc_data = mins
 	allscanpending = true
 	SortAuctionClearSort("list")
 	QueryAuctionItems("", nil, nil, 0, nil, nil, true, false, nil)

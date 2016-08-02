@@ -80,7 +80,7 @@ ContainerFrameItemButton_OnModifiedClick = function(self, button, ...)
 
 		local stacksize = IsShiftKeyDown() and 1 or select(2, GetContainerItemInfo(bag, slot))
 		local price = GetPrice(link, stacksize)
-		if id and not tekauc.mins[id] and not searched[id] then
+		if id and not ns.scannedall and not searched[id] then
 			searched[id] = true
 			local name = GetItemInfo(id)
 			BrowseName:SetText(name)

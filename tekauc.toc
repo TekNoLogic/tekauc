@@ -10,7 +10,7 @@
 ## SavedVariables: tekaucDB
 ## SavedVariablesPerCharacter: tekaucDBPC
 
-## OptionalDeps: tekDebug, NutCounter
+## OptionalDeps: tekauc_data, tekDebug, NutCounter
 
 ## LoadOnDemand: 1
 ## LoadWith: Blizzard_AuctionUI
