@@ -4,9 +4,8 @@ local myname, ns = ...
 local INFLATION_LIMIT = 2.5 -- Maximum markup we'll allow over manually set prices
 local maxes, counts, lastseen = {}, {}, {}
 local allscaninprogress, touched
-local mins = tekauc_data or {}
+local mins = tekauc_data and tekauc_data.GetTable() or {}
 
-tekauc_data = mins
 tekauc.mins, tekauc.maxes, tekauc.counts = mins, maxes, counts
 
 
@@ -99,7 +98,7 @@ butt:SetScript("OnClick", function(self)
 	self:SetText("Querying...")
 	mins, maxes, counts = {}, {}, {}
 	tekauc.mins, tekauc.maxes, tekauc.counts = mins, maxes, counts
-	tekauc_data = mins
+	if tekauc_data then tekauc_data.SetTable(mins) end
 	allscanpending = true
 	SortAuctionClearSort("list")
 	QueryAuctionItems("", nil, nil, 0, nil, nil, true, false, nil)
