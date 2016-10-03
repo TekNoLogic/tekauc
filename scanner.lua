@@ -119,7 +119,7 @@ butt:SetScript("OnEvent", function(self)
 		ns.Printf("Server response %.01f seconds", starttime - querytime)
 		ns.Print("Starting scan")
 	elseif not allscaninprogress and num < 5000 then
-		touched, totalresults, nextblock = {}, num, 1
+		touched = {}
 		ScanBlock(1, num)
 	end
 end)
