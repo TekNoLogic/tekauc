@@ -107,7 +107,7 @@ butt:SetScript("OnClick", function(self)
 	default_ui_was_registered = AuctionFrameBrowse:IsEventRegistered("AUCTION_ITEM_LIST_UPDATE")
 	AuctionFrameBrowse:UnregisterEvent("AUCTION_ITEM_LIST_UPDATE")
 	SortAuctionClearSort("list")
-	QueryAuctionItems("", nil, nil, 0, nil, nil, true, false, nil)
+	QueryAuctionItems(nil, nil, nil, nil, nil, nil, true)
 end)
 
 butt:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
