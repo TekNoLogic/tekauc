@@ -43,6 +43,7 @@ local enabled = true
 local BLOCKSIZE = 40
 local TICKLENGTH = 0.1
 local totalresults, nextblock, starttime, nexttick, throttle
+local default_ui_was_registered
 butt:SetScript("OnUpdate", function(self, elap)
 	-- Once per second we check our framerate and adjust or scan speed
 	if allscaninprogress then
@@ -76,6 +77,9 @@ butt:SetScript("OnUpdate", function(self, elap)
 			ns.scannedall = true
 			allscaninprogress = false
 			totalresults, nextblock, starttime = nil
+			if default_ui_was_registered then
+				AuctionFrameBrowse:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
+			end
 		else
 			nextblock = endindex + 1
 			nexttick = GetTime() + TICKLENGTH
@@ -100,6 +104,8 @@ butt:SetScript("OnClick", function(self)
 	tekauc.mins, tekauc.maxes, tekauc.counts = mins, maxes, counts
 	if tekauc_data then tekauc_data.SetTable(mins) end
 	allscanpending = true
+	default_ui_was_registered = AuctionFrameBrowse:IsEventRegistered("AUCTION_ITEM_LIST_UPDATE")
+	AuctionFrameBrowse:UnregisterEvent("AUCTION_ITEM_LIST_UPDATE")
 	SortAuctionClearSort("list")
 	QueryAuctionItems("", nil, nil, 0, nil, nil, true, false, nil)
 end)
