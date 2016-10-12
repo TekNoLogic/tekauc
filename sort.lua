@@ -10,7 +10,7 @@
 
 SortAuctionClearSort("list") -- clear the existing sort.
 SortAuctionSetSort("list", "duration", true)
-SortAuctionSetSort("list", "buyoutthenbid", true)
+SortAuctionSetSort("list", "buyoutthenbid", false)
 SortAuctionSetSort("list", "name", true)
 SortAuctionSetSort("list", "level", false)
 SortAuctionSetSort("list", "quality", true)
