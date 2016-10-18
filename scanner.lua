@@ -80,6 +80,7 @@ butt:SetScript("OnUpdate", function(self, elap)
 			if default_ui_was_registered then
 				AuctionFrameBrowse:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
 			end
+			ns.AllScanComplete()
 		else
 			nextblock = endindex + 1
 			nexttick = GetTime() + TICKLENGTH

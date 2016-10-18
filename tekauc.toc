@@ -33,3 +33,4 @@ seller.lua
 sort.lua
 buyout.lua
 splitter.lua
+scan_status.lua
