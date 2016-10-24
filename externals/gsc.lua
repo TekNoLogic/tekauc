@@ -1,11 +1,13 @@
 
 local myname, ns = ...
 
-local GOLD, SILVER, COPPER = "|cffffd700%s", "|cffc7c7cf%02d", "|cffeda55f%02d"
+local G, S, C = "|cffffd700", "|cffc7c7cf", "|cffeda55f"
+local GOLD, SILVER, COPPER = G.."%s", S.."%s", C.."%s"
+local SILVER00, COPPER00 = S.."%02d", C.."%02d"
 
-local GSC = string.join('.', GOLD, SILVER, COPPER)
-local GS  = string.join('.', GOLD, SILVER)
-local  SC = string.join('.',       SILVER, COPPER)
+local GSC = string.join('.', GOLD, SILVER00, COPPER00)
+local GS  = string.join('.', GOLD, SILVER00)
+local  SC = string.join('.',       SILVER,   COPPER00)
 
 
 -- Converts an integer into a colored gold.silver.copper string
