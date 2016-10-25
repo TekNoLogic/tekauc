@@ -24,13 +24,14 @@ local function Tick()
 end
 
 
-ns.RegisterCallback(allscantext, "SCAN_STARTING", function()
+local C = {}
+ns.RegisterCallback(C, "SCAN_STARTING", function()
 	ns.block_size = DEFAULT_BLOCK_SIZE
 	scanning = true
 	Tick()
 end)
 
 
-ns.RegisterCallback(allscantext, "SCAN_COMPLETE", function()
+ns.RegisterCallback(C, "SCAN_COMPLETE", function()
 	scanning = false
 end)
