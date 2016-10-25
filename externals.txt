@@ -1,4 +1,5 @@
 bound.lua
+debug.lua
 gsc.lua
 messages.lua
 print.lua

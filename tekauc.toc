@@ -17,6 +17,7 @@
 
 externals\tooltip_scanner.lua
 externals\bound.lua
+externals\debug.lua
 externals\gsc.lua
 externals\messages.lua
 externals\print.lua

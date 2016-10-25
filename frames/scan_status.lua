@@ -26,10 +26,9 @@ hooksecurefunc("QueryAuctionItems", function(_, _, _, _, _, _, get_all)
 end)
 
 
-local SERVER_RESPONSE = "Server response %.01f seconds"
 local function OnScanStarting(self, message, num, total)
 	start_time = GetTime()
-	ns.Printf(SERVER_RESPONSE, start_time - query_time)
+	ns.Debug("Server response", start_time - query_time)
 	query_time = nil
 end
 
