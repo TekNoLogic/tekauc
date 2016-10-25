@@ -116,6 +116,7 @@ butt:SetScript("OnEvent", function(self)
 	 	allscaninprogress = true
 		touched, totalresults, nextblock = {}, num, 1
 		nexttick = GetTime()
+		ns.SendMessage("SCAN_STARTING")
 	elseif not allscaninprogress and num < 5000 then
 		touched = {}
 		ScanBlock(1, num)
