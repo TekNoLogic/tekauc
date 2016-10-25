@@ -23,6 +23,8 @@ externals\print.lua
 
 frames\scan_status.lua
 
+services\scanner_throttle.lua
+
 LibStub.lua
 tekKonfigAboutPanel.lua
 tekKonfigButton.lua
