@@ -18,7 +18,10 @@
 externals\tooltip_scanner.lua
 externals\bound.lua
 externals\gsc.lua
+externals\messages.lua
 externals\print.lua
+
+frames\scan_status.lua
 
 LibStub.lua
 tekKonfigAboutPanel.lua
@@ -33,4 +36,3 @@ seller.lua
 sort.lua
 buyout.lua
 splitter.lua
-scan_status.lua

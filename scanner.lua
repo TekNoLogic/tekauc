@@ -64,15 +64,14 @@ butt:SetScript("OnUpdate", function(self, elap)
 		local endindex = nextblock + BLOCKSIZE
 		if endindex > totalresults then endindex = totalresults end
 
-		self:SetText(string.format("%d%% done", 100.0 * nextblock / totalresults))
+		ns.SendMessage("SCAN_PROGRESS", nextblock, totalresults)
 		local t = GetTime()
 		ScanBlock(nextblock, endindex)
 
 		if endindex == totalresults then
 			for _,sellbutt in pairs(ns.sellbutts) do sellbutt:Enable() end
 			local elap = GetTime() - starttime
-			ns.Printf("Done scanning: %d items in %.01f seconds", totalresults, elap)
-			self:SetText("Scan All")
+			ns.SendMessage("SCAN_COMPLETE", totalresults, elap)
 
 			ns.scannedall = true
 			allscaninprogress = false
@@ -80,7 +79,6 @@ butt:SetScript("OnUpdate", function(self, elap)
 			if default_ui_was_registered then
 				AuctionFrameBrowse:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
 			end
-			ns.AllScanComplete()
 		else
 			nextblock = endindex + 1
 			nexttick = GetTime() + TICKLENGTH
@@ -99,8 +97,6 @@ end)
 local allscanpending, querytime
 butt:SetScript("OnClick", function(self)
 	querytime = GetTime()
-	ns.Print("Sending all-scan query")
-	self:SetText("Querying...")
 	mins, maxes, counts = {}, {}, {}
 	tekauc.mins, tekauc.maxes, tekauc.counts = mins, maxes, counts
 	if tekauc_data then tekauc_data.SetTable(mins) end
@@ -124,7 +120,6 @@ butt:SetScript("OnEvent", function(self)
 		touched, totalresults, nextblock = {}, num, 1
 		nexttick = starttime
 		ns.Printf("Server response %.01f seconds", starttime - querytime)
-		ns.Print("Starting scan")
 	elseif not allscaninprogress and num < 5000 then
 		touched = {}
 		ScanBlock(1, num)

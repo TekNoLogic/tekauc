@@ -1,4 +1,5 @@
 bound.lua
 gsc.lua
+messages.lua
 print.lua
 tooltip_scanner.lua
