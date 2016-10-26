@@ -1,6 +1,7 @@
 bound.lua
 debug.lua
 gsc.lua
+itemid.lua
 messages.lua
 print.lua
 tooltip_scanner.lua

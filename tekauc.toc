@@ -19,6 +19,7 @@ externals\tooltip_scanner.lua
 externals\bound.lua
 externals\debug.lua
 externals\gsc.lua
+externals\itemid.lua
 externals\messages.lua
 externals\print.lua
 
@@ -29,7 +30,6 @@ services\scanner_throttle.lua
 LibStub.lua
 tekKonfigAboutPanel.lua
 tekKonfigButton.lua
-tekIDmemo.lua
 
 tekauc.lua
 scanner.lua
