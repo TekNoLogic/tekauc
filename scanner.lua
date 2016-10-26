@@ -90,22 +90,45 @@ butt:SetScript("OnClick", function(self)
 	QueryAuctionItems(nil, nil, nil, nil, nil, nil, true)
 end)
 
+
+local function ShouldAllScan()
+	local num, total = GetNumAuctionItems("list")
+	if allscanpending and num == total then return true end
+end
+
+
+local function ShouldPartialScan()
+	if allscanpending or allscaninprogress then return false end
+	if GetNumAuctionItems("list") > 5000 then return false end
+	if AuctionFrameBrowse.page ~= 0 then return false end
+
+	local column, reverse = GetAuctionSort("list", 1)
+	if column == "unitprice" and not reverse then return true end
+end
+
+
+local function BeginAllScan()
+	allscanpending = false
+	allscaninprogress = true
+	touched = {}
+	totalresults = GetNumAuctionItems("list")
+	nextblock = 1
+	nexttick = GetTime()
+	ns.SendMessage("SCAN_STARTING")
+end
+
+
+local function BeginPartialScan()
+	local num = GetNumAuctionItems("list")
+	touched = {}
+	ScanBlock(1, num)
+end
+
+
 butt:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
 butt:SetScript("OnEvent", function(self)
-	local num, total = GetNumAuctionItems("list")
-	if total < 10000000 and num ~= total then return end
-
-
-	if allscanpending then
-		allscanpending = false
-	 	allscaninprogress = true
-		touched, totalresults, nextblock = {}, num, 1
-		nexttick = GetTime()
-		ns.SendMessage("SCAN_STARTING")
-	elseif not allscaninprogress and num < 5000 then
-		touched = {}
-		ScanBlock(1, num)
-	end
+	if ShouldAllScan() then return BeginAllScan() end
+	if ShouldPartialScan() then BeginPartialScan() end
 end)
 
 
