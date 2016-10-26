@@ -1,17 +1,3 @@
 
---~ AuctionSort["list_bid"] = {
---~ 	{column = "duration",	reverse = false},
---~ 	{column = "quantity",	reverse = true},
---~ 	{column = "name",     reverse = false},
---~ 	{column = "level",    reverse = true},
---~ 	{column = "quality",  reverse = false},
---~ 	{column = "buyoutthenbid", reverse = false},
---~ }
-
-SortAuctionClearSort("list") -- clear the existing sort.
-SortAuctionSetSort("list", "duration", true)
-SortAuctionSetSort("list", "buyoutthenbid", false)
-SortAuctionSetSort("list", "name", true)
-SortAuctionSetSort("list", "level", false)
-SortAuctionSetSort("list", "quality", true)
-SortAuctionSetSort("list", "quantity", true)
+-- Default to sort by cheapest unit price
+SortAuctionSetSort("list", "unitprice")
