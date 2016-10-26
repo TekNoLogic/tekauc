@@ -14,7 +14,7 @@ allscantext:Hide()
 allscan:SetScript("OnShow", function() allscantext:Hide() end)
 
 
-local query_time, start_time
+local query_time, response_time, start_time
 hooksecurefunc("QueryAuctionItems", function(_, _, _, _, _, _, get_all)
 	if get_all then
 		query_time = GetTime()
@@ -28,7 +28,7 @@ end)
 
 local function OnScanStarting(self, message, num, total)
 	start_time = GetTime()
-	ns.Debug("Server response", start_time - query_time)
+	response_time = start_time - query_time
 	query_time = nil
 end
 
@@ -39,10 +39,10 @@ local function OnScanProgress(self, message, num, total)
 end
 
 
-local COMPLETE = "Done scanning\n%d items in %.01f seconds"
+local COMPLETE = "%s records scanned\n%.01fs server response\n%.01fs scanning"
 local function OnScanComplete(self, message, total)
 	local time = GetTime() - start_time
-	self:SetFormattedText(COMPLETE, total, time)
+	self:SetFormattedText(COMPLETE, BreakUpLargeNumbers(total), response_time, time)
 end
 
 
